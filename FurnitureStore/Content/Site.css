@@ -1,0 +1,140 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+    line-height: 20px;
+    padding: 0 0 5px 5px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+img, a img {
+    border: none;
+}
+
+span {
+    outline: none;
+}
+
+/*.container {
+    max-width: 100%;
+    padding: 0 0 0 0;
+  }*/
+
+.products-list {
+    overflow: hidden;
+    margin-left: -20px;
+    padding-top: 20px;
+    font-size: 0;
+}
+
+.products_i {
+    width: 320px;
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    color: #464646;
+    line-height: 18px;
+    transition: all 0.1s ease;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 12px;
+}
+
+.products_pic {
+    background-color: #f0f0f0;
+    display: block;
+    padding: 10px;
+}
+
+    .products_pic img {
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+.products_content {
+    padding: 0 10px 20px 10px;
+}
+
+.products_title {
+    font-size: 14px;
+    line-height: 18px;
+    margin-top: 5px;
+}
+
+    .products_title a {
+        text-decoration: none;
+    }
+
+.products_i .price {
+    margin-top: 4px;
+}
+
+.price {
+    display: inline-block;
+    font-size: 24px;
+    line-height: 30px;
+}
+
+a.gray, .gray {
+    color: #999;
+}
+
+.products_i .gray {
+    margin-top: 4px;
+}
+
+.map {
+    width: 100%;
+    height: 400px;
+}
+
+.base-bg {
+    background-color: #f0f0f0;
+}
+
+.content_i {
+    position: relative;
+    padding-top: 36px;
+    padding-bottom: 36px;
+}
+
+.layout_main {
+    margin: 0 auto;
+    position: relative;
+}
+
+.product_description-left {
+    width: 35%;
+    float: left;
+}
+
+.product_photos-right {
+    width: 59%;
+    float: left;
+    margin-left: 5%;
+}
+
+.clearfix {
+    content: "";
+    display: table;
+    clear: both;
+}
