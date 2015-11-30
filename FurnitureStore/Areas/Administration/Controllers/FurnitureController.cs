@@ -35,7 +35,9 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // GET: Furnitures/Create
         public ActionResult Create() {
             var producers = db.Producers.ToList();
-            return View(new FurnitureViewModel(producers));
+            var furniture = new FurnitureViewModel(producers);
+            furniture.PublishDate = DateTime.Now;
+            return View(furniture);
         }
 
         // POST: Furnitures/Create
@@ -43,7 +45,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture, IEnumerable<HttpPostedFileBase> files) {
+        public ActionResult Create([Bind(Include = "Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture, IEnumerable<HttpPostedFileBase> files) {
             try {
                 if (ModelState.IsValid) {
                     using (var transaction = db.Database.BeginTransaction()) {
@@ -99,14 +101,31 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture) {
+        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture, IEnumerable<HttpPostedFileBase> files) {
             try {
                 if (ModelState.IsValid) {
-                    furniture.UpdateUser = User.Identity.Name;
-                    furniture.UpdateDate = DateTime.Now;
+                    using (var transaction = db.Database.BeginTransaction()) {
+                        foreach (var file in files) {
+                            if (file != null && file.ContentLength > 0) {
+                                var fileName = Path.GetFileName(file.FileName);
+                                var path = Path.Combine(Server.MapPath("~/assets"), fileName);
+                                file.SaveAs(path);
 
-                    db.Entry(furniture).State = EntityState.Modified;
-                    db.SaveChanges();
+                                db.Images.Add(new Image {
+                                    URL = fileName,
+                                    FurnitureID = furniture.ID
+                                });
+                            }
+                        }
+
+                        furniture.UpdateUser = User.Identity.Name;
+                        furniture.UpdateDate = DateTime.Now;
+
+                        db.Entry(furniture).State = EntityState.Modified;
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
+
                     return RedirectToAction("Index");
                 }
             }

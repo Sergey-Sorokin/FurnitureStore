@@ -1,18 +1,17 @@
 ﻿@model FurnitureStore.ViewModels.FurnitureViewModel
 
 @{
-    ViewBag.Title = "Предложение мебели";
+    ViewBag.Title = "Изменение объявления";
 }
 
 <h2>@ViewBag.Title</h2>
 
+<div class="form-horizontal">
+    <h4>Мебель</h4>
+    <hr />
 
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>@ViewBag.Title</h4>
-        <hr />
+    @using (Html.BeginForm("Edit", "Furniture", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
 
@@ -35,7 +34,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PublishDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PublishDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PublishDate, new { htmlAttributes = new { @class = "form-control date-control" } })
                 @Html.ValidationMessageFor(model => model.PublishDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -89,21 +88,54 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Images, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ValidationMessage("files", "", new { @class = "text-danger" })
+                <input type="file" name="files" id="file1" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file2" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file3" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file4" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file5" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file6" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file7" class="btn btn-default btn-file" />
+                <input type="file" name="files" id="file8" class="btn btn-default btn-file" />
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Сохранить" class="btn btn-default" />
                 @Html.ActionLink("Назад", "Index", null, new { @class = "btn btn-default" })
             </div>
         </div>
-        <div class="form-group">
-            <div class="fotorama">
+
+        if (Model.Images != null) {
+            <div class="form-group">
                 @foreach (var img in Model.Images) {
-                    @Html.DisplayFor(model => img)
+                    @Html.DisplayFor(model => img, new { Width = 200 })
                 }
             </div>
-        </div>
-    </div>
-}
-
+        }
+    }
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datepicker")
+    @Scripts.Render("~/bundles/globalization")
+
+    @*<script>
+            fotoramaDefaults = {
+                width: '100%',
+                ratio: 16 / 9,
+                allowfullscreen: 'native',
+                nav: 'thumbs',
+                autoplay: true
+            }
+        </script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>*@
+}
+
+@section Styles {
+    @Styles.Render("~/Content/datepicker");
+    @*<link href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">*@
 }

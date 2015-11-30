@@ -7,15 +7,14 @@ namespace FurnitureStore.Models {
     public class Furniture {
         public int ID { get; set; }
 
-        public int? ProducerID { get; set; }
-
         [StringLength(100, MinimumLength = 2)]
         [Display(Name = "Название")]
+        [Required()]
         public String Name { get; set; }
 
         [Required()]
         [Display(Name = "Дата публикации")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.DateTime)]
         public DateTime PublishDate { get; set; }
 
@@ -31,7 +30,7 @@ namespace FurnitureStore.Models {
         [DisplayFormat(DataFormatString = "{0:#,##0 KZT}")]
         [Display(Name = "Цена")]
         [DataType(DataType.Currency)]
-        [Column(TypeName ="money")]
+        [Column(TypeName = "money")]
         public decimal Price { get; set; }
 
         [Display(Name = "Размер")]
@@ -48,6 +47,7 @@ namespace FurnitureStore.Models {
 
         [Display(Name = "Производитель")]
         public virtual Producer Producer { get; set; }
+        public int? ProducerID { get; set; }
 
         public String CreateUser { get; set; }
         public DateTime? CreateDate { get; set; }

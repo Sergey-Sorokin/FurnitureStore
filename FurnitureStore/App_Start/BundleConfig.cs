@@ -1,13 +1,10 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace FurnitureStore
-{
-    public class BundleConfig
-    {
+namespace FurnitureStore {
+    public class BundleConfig {
         //Дополнительные сведения об объединении см. по адресу: http://go.microsoft.com/fwlink/?LinkId=301862
-        public static void RegisterBundles(BundleCollection bundles)
-        {
+        public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
@@ -26,6 +23,22 @@ namespace FurnitureStore
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            // Datepicker
+
+            bundles.Add(new ScriptBundle("~/bundles/datepicker").Include(
+                "~/Scripts/bootstrap-datepicker.js",
+                "~/Scripts/locales/bootstrap-datepicker.ru.min.js",
+                "~/Scripts/datepicker.js"));
+
+            bundles.Add(new StyleBundle("~/Content/datepicker").Include(
+                "~/Content/bootstrap-datepicker3.css"));
+
+            // Globalization
+
+            bundles.Add(new ScriptBundle("~/bundles/globalization").Include(
+                "~/Scripts/cldr.js",
+                "~/Scripts/globalize.js"));
         }
     }
 }
