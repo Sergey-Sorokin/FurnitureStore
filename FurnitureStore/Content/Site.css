@@ -64,11 +64,13 @@ span {
     padding: 10px;
 }
 
-    .products_pic img {
-        max-width: 300px;
-        display: block;
-        margin: 0 auto;
-    }
+.products_pic img {
+    max-width: 300px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+    height: 200px;   
+}
 
 .products_content {
     padding: 0 10px 20px 10px;
@@ -80,9 +82,9 @@ span {
     margin-top: 5px;
 }
 
-    .products_title a {
-        text-decoration: none;
-    }
+.products_title a {
+    text-decoration: none;
+}
 
 .products_i .price {
     margin-top: 4px;
