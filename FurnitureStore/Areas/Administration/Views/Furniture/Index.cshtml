@@ -42,7 +42,7 @@
             </td>
             <td>
                 @Html.ActionLink("Изменить", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Посмотреть", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Посмотреть", "Details", new { area = "", id = item.ID }, new { target = "_blank" }) |
                 @Html.ActionLink("Удалить", "Delete", new { id = item.ID })
             </td>
         </tr>

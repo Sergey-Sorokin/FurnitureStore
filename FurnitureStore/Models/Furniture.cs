@@ -34,10 +34,10 @@ namespace FurnitureStore.Models {
         public decimal Price { get; set; }
 
         [Display(Name = "Размер")]
-        public int? Size { get; set; }
+        public String Size { get; set; }
 
         [Display(Name = "Цвет")]
-        public int? Color { get; set; }
+        public String Color { get; set; }
 
         [Display(Name = "Рейтинг")]
         public int? Rating { get; set; }

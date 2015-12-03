@@ -13,14 +13,7 @@ namespace FurnitureStore.Controllers {
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly ApplicationDbContext db;
-
-        public FurnitureController(ApplicationDbContext dbContext) {
-            logger.Info("[Start] FurnitureController initialization");
-            db = dbContext;
-            logger.Debug("Context: {0}", db);
-            logger.Info("[End] FurnitureController initialization");
-        }
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Furnitures
         public ActionResult Index() {
@@ -50,9 +43,9 @@ namespace FurnitureStore.Controllers {
         protected override void Dispose(bool disposing) {
             logger.Info("[Start] Dispose");
             logger.Debug("disposing: {0}", disposing);
-            //if (disposing) {
-            //    db.Dispose();
-            //}
+            if (disposing) {
+                db.Dispose();
+            }
             base.Dispose(disposing);
             logger.Info("[End] Dispose");
         }

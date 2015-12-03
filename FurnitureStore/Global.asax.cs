@@ -1,7 +1,10 @@
-﻿using StackExchange.Profiling;
+﻿using FurnitureStore.Migrations;
+using FurnitureStore.Models;
+using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +19,8 @@ namespace FurnitureStore {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             MiniProfilerEF6.Initialize();
+
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
 
         protected void Application_BeginRequest() {

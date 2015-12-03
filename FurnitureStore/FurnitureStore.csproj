@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201511301022532_FurnitureChange.Designer.cs">
       <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512030458062_ColorSizeDataTypeChange.cs" />
+    <Compile Include="Migrations\201512030458062_ColorSizeDataTypeChange.Designer.cs">
+      <DependentUpon>201512030458062_ColorSizeDataTypeChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ninject\FurnitureNinjectModule.cs" />
     <Compile Include="ViewModels\FurnitureViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -402,6 +406,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201511301022532_FurnitureChange.resx">
       <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512030458062_ColorSizeDataTypeChange.resx">
+      <DependentUpon>201512030458062_ColorSizeDataTypeChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
