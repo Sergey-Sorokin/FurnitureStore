@@ -13,6 +13,7 @@ using FurnitureStore.ViewModels;
 
 namespace FurnitureStore.Controllers {
     [Authorize]
+    [RequireHttps]
     public class AccountController : Controller {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -319,7 +320,7 @@ namespace FurnitureStore.Controllers {
                 if (info == null) {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Name ?? model.Email, Email = model.Email, Name = model.Name };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded) {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);

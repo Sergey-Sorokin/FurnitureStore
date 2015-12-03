@@ -11,48 +11,67 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using FurnitureStore.Models;
+using Twilio;
 
-namespace FurnitureStore
-{
-    public class EmailService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
+namespace FurnitureStore {
+    public class EmailService : IIdentityMessageService {
+        public Task SendAsync(IdentityMessage message) {
             // Подключите здесь службу электронной почты для отправки сообщения электронной почты.
             return Task.FromResult(0);
         }
     }
 
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
+    public class SmsService : IIdentityMessageService {
+        public Task SendAsync(IdentityMessage message) {
             // Подключите здесь службу SMS, чтобы отправить текстовое сообщение.
+
+            // Twilio Begin
+            var Twilio = new TwilioRestClient(
+              System.Configuration.ConfigurationManager.AppSettings["SMSAccountIdentification"],
+              System.Configuration.ConfigurationManager.AppSettings["SMSAccountPassword"]);
+            var result = Twilio.SendMessage(
+              System.Configuration.ConfigurationManager.AppSettings["SMSAccountFrom"],
+              message.Destination, message.Body
+            );
+            //Status is one of Queued, Sending, Sent, Failed or null if the number is not valid
+            // Trace.TraceInformation(result.Status);
+            //Twilio doesn't currently have an async API, so return success.
             return Task.FromResult(0);
+            // Twilio End
+
+            // ASPSMS Begin 
+            // var soapSms = new MvcPWx.ASPSMSX2.ASPSMSX2SoapClient("ASPSMSX2Soap");
+            // soapSms.SendSimpleTextSMS(
+            //   System.Configuration.ConfigurationManager.AppSettings["SMSAccountIdentification"],
+            //   System.Configuration.ConfigurationManager.AppSettings["SMSAccountPassword"],
+            //   message.Destination,
+            //   System.Configuration.ConfigurationManager.AppSettings["SMSAccountFrom"],
+            //   message.Body);
+            // soapSms.Close();
+            // return Task.FromResult(0);
+            // ASPSMS End
+
+
+            //return Task.FromResult(0);
         }
     }
 
     // Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
-    public class ApplicationUserManager : UserManager<ApplicationUser>
-    {
+    public class ApplicationUserManager : UserManager<ApplicationUser> {
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
-            : base(store)
-        {
+            : base(store) {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
-        {
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Настройка логики проверки имен пользователей
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
-            {
+            manager.UserValidator = new UserValidator<ApplicationUser>(manager) {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
 
             // Настройка логики проверки паролей
-            manager.PasswordValidator = new PasswordValidator
-            {
+            manager.PasswordValidator = new PasswordValidator {
                 RequiredLength = 6,
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
@@ -67,21 +86,18 @@ namespace FurnitureStore
 
             // Регистрация поставщиков двухфакторной проверки подлинности. Для получения кода проверки пользователя в данном приложении используется телефон и сообщения электронной почты
             // Здесь можно указать собственный поставщик и подключить его.
-            manager.RegisterTwoFactorProvider("Код, полученный по телефону", new PhoneNumberTokenProvider<ApplicationUser>
-            {
+            manager.RegisterTwoFactorProvider("Код, полученный по телефону", new PhoneNumberTokenProvider<ApplicationUser> {
                 MessageFormat = "Ваш код безопасности: {0}"
             });
-            manager.RegisterTwoFactorProvider("Код из сообщения", new EmailTokenProvider<ApplicationUser>
-            {
+            manager.RegisterTwoFactorProvider("Код из сообщения", new EmailTokenProvider<ApplicationUser> {
                 Subject = "Код безопасности",
                 BodyFormat = "Ваш код безопасности: {0}"
             });
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
-            if (dataProtectionProvider != null)
-            {
-                manager.UserTokenProvider = 
+            if (dataProtectionProvider != null) {
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
@@ -89,20 +105,16 @@ namespace FurnitureStore
     }
 
     // Настройка диспетчера входа для приложения.
-    public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
-    {
+    public class ApplicationSignInManager : SignInManager<ApplicationUser, string> {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
-            : base(userManager, authenticationManager)
-        {
+            : base(userManager, authenticationManager) {
         }
 
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
-        {
+        public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user) {
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
 
-        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
-        {
+        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context) {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }
     }

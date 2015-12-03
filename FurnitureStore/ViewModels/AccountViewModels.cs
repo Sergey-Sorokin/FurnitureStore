@@ -8,6 +8,9 @@ namespace FurnitureStore.ViewModels
         [Required]
         [Display(Name = "Адрес электронной почты")]
         public string Email { get; set; }
+
+        [Display(Name = "Имя пользователя")]
+        public string Name { get; set; }
     }
 
     public class ExternalLoginListViewModel
