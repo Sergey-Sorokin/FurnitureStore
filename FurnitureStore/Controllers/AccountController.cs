@@ -13,7 +13,7 @@ using FurnitureStore.ViewModels;
 
 namespace FurnitureStore.Controllers {
     [Authorize]
-    [RequireHttps]
+    //[RequireHttps]
     public class AccountController : Controller {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;

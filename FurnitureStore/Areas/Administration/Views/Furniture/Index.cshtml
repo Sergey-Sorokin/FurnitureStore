@@ -1,14 +1,22 @@
 ﻿@model IEnumerable<FurnitureStore.Models.Furniture>
+@using FurnitureStore.Areas.Administration.ViewModels
 
 @{
     ViewBag.Title = "Предложения";
 }
 
-<h2>Предложения</h2>
-
+<h2>
+    Предложения
+</h2>
+<br />
 <p>
-    @Html.ActionLink("Добавить", "Create", null, new { @class = "btn btn-default" })
+    <a href="@Url.Action("Create")" class="btn btn-default" title="Добавить">
+        <i class="glyphicon glyphicon-plus-sign"></i>
+        <span class="sr-only">Добавить</span>Добавить
+    </a>
 </p>
+
+
 <table class="table">
     <tr>
         <th>
@@ -41,9 +49,10 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.ActionLink("Изменить", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Посмотреть", "Details", new { area = "", id = item.ID }, new { target = "_blank" }) |
-                @Html.ActionLink("Удалить", "Delete", new { id = item.ID })
+                @Html.Partial("_ControlPartial", new ControlViewModel {
+                    Actions = Actions.Edit | Actions.View | Actions.Delete,
+                    ID = item.ID
+                })
             </td>
         </tr>
     }

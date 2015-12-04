@@ -26,7 +26,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", rows = 8 } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -91,16 +91,26 @@
             @Html.LabelFor(model => model.Images, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.ValidationMessage("files", "", new { @class = "text-danger" })
-                <input type="file" name="files" id="file1" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file2" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file3" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file4" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file5" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file6" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file7" class="btn btn-default btn-file" />
-                <input type="file" name="files" id="file8" class="btn btn-default btn-file" />
+                <span class="btn btn-default btn-file">
+                    Загрузить<input type="file" name="files" multiple />
+                </span>
             </div>
         </div>
+
+        if (Model.Images != null) {
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="checkbox checkbox-primary">
+                        @foreach (var img in Model.Images) {
+                            @Html.DisplayFor(model => img, new { Width = 150 })
+                            <input type="checkbox" name="images" value="@img.ID" checked="checked" class="image-checkbox" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <hr />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -108,14 +118,6 @@
                 @Html.ActionLink("Назад", "Index", null, new { @class = "btn btn-default" })
             </div>
         </div>
-
-        if (Model.Images != null) {
-            <div class="form-group">
-                @foreach (var img in Model.Images) {
-                    @Html.DisplayFor(model => img, new { Width = 200 })
-                }
-            </div>
-        }
     }
 </div>
 @section Scripts {

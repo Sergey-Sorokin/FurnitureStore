@@ -49,6 +49,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="InteractivePreGeneratedViews, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
+      <HintPath>..\packages\EFInteractiveViews.1.0.1\lib\net45\InteractivePreGeneratedViews.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -212,6 +216,12 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\ProducerController.cs" />
+    <Compile Include="Areas\Administration\ViewModels\ControlViewModel.cs" />
+    <Compile Include="ApplicationDbContext.Views1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApplicationDbContext.Views1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201511301022532_FurnitureChange.cs" />
     <Compile Include="Migrations\201511301022532_FurnitureChange.Designer.cs">
       <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
@@ -246,6 +256,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ApplicationDbContext.Views1.xml">
+      <DependentUpon>ApplicationDbContext.Views1.tt</DependentUpon>
+    </EmbeddedResource>
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-datepicker.min.css" />
     <Content Include="Content\bootstrap-datepicker.standalone.css" />
@@ -258,6 +271,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="ApplicationDbContext.Views1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ApplicationDbContext.Views1.cs</LastGenOutput>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -269,7 +286,6 @@
     <Content Include="Areas\Administration\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Administration\Views\Producer\Create.cshtml" />
     <Content Include="Areas\Administration\Views\Producer\Delete.cshtml" />
-    <Content Include="Areas\Administration\Views\Producer\Details.cshtml" />
     <Content Include="Areas\Administration\Views\Producer\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Producer\Index.cshtml" />
     <Content Include="NLog.config" />
@@ -281,6 +297,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\Administration\Views\Shared\_ControlPartial.cshtml" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -409,7 +426,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Create.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Delete.cshtml" />
-    <Content Include="Areas\Administration\Views\Furniture\Details.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Index.cshtml" />
     <Content Include="Views\Furniture\Index.cshtml" />
@@ -436,6 +452,9 @@
     <EmbeddedResource Include="Migrations\201512030809376_GoogleAuthChange.resx">
       <DependentUpon>201512030809376_GoogleAuthChange.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

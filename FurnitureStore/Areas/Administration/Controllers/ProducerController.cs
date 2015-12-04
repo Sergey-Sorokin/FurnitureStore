@@ -17,18 +17,6 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             return View(db.Producers.ToList());
         }
 
-        // GET: Administration/Producers/Details/5
-        public ActionResult Details(int? id) {
-            if (id == null) {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Producer producer = db.Producers.Find(id);
-            if (producer == null) {
-                return HttpNotFound();
-            }
-            return View(producer);
-        }
-
         // GET: Administration/Producers/Create
         public ActionResult Create() {
             return View();

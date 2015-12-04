@@ -1,0 +1,23 @@
+﻿@using FurnitureStore.Areas.Administration.ViewModels
+@model ControlViewModel
+
+@if (Model.Actions.HasFlag(Actions.Edit)) {
+    <a href="@Url.Action("Edit", new { id = Model.ID })" class="btn btn-default" title="Изменить">
+        <i class="glyphicon glyphicon-edit"></i>
+        <span class="sr-only">Изменить</span>
+    </a>
+}
+
+@if (Model.Actions.HasFlag(Actions.View)) {
+    <a href="@Url.Action("Details", new { area = "", id = Model.ID })" target="_blank" class="btn btn-default" title="Просмотреть">
+        <i class="glyphicon glyphicon-new-window"></i>
+        <span class="sr-only">Просмотреть</span>
+    </a>
+}
+
+@if (Model.Actions.HasFlag(Actions.Delete)) {
+    <a href="@Url.Action("Delete", new { id = Model.ID })" class="btn btn-default" title="Удалить">
+        <i class="glyphicon glyphicon-trash"></i>
+        <span class="sr-only">Удалить</span>
+    </a>
+}
