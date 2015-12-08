@@ -1,60 +1,45 @@
 ﻿@model FurnitureStore.Models.Furniture
 
 @{
-    ViewBag.Title = "Предложение";
+    ViewBag.Title = String.Format("{0} за {1:#,##0} KZT", Model.Name, Model.Price);
 }
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 
 <h3>@Html.DisplayFor(model => model.Price)</h3>
 
+@if (!String.IsNullOrWhiteSpace(Model.ArticleNo)) {
+    <h4>Артикул: @Html.DisplayFor(model => model.ArticleNo)</h4>
+}
+
 <div class="content_i base-bg">
     <div class="layout_main">
         <div class="product_description-left">
-            <dl class="dl-horizontal">
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Description)
-                </dt>
-
-                <dd>
+            @if (!String.IsNullOrWhiteSpace(Model.Description)) {
+                <div class="product_text">
                     @Html.DisplayFor(model => model.Description)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Producer.FullName)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Producer.FullName)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.ArticleNo)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.ArticleNo)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Size)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Size)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Color)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Color)
-                </dd>
-
-            </dl>
-
+                </div>
+            }
+            <div class="product_description">
+                @if (Model.Producer != null && !String.IsNullOrWhiteSpace(Model.Producer.FullName)) {
+                    <div class="product_description_param">
+                        <strong>@Html.DisplayNameFor(model => model.Producer.FullName)</strong>
+                        <p>@Html.DisplayFor(model => model.Producer.FullName)</p>
+                    </div>
+                }
+                @if (!String.IsNullOrWhiteSpace(Model.Size)) {
+                    <div class="product_description_param">
+                        <strong>@Html.DisplayNameFor(model => model.Size)</strong>
+                        <p>@Html.DisplayFor(model => model.Size)</p>
+                    </div>
+                }
+                @if (!String.IsNullOrWhiteSpace(Model.Color)) {
+                    <div class="product_description_param">
+                        <strong>@Html.DisplayNameFor(model => model.Color)</strong>
+                        <p>@Html.DisplayFor(model => model.Color)</p>
+                    </div>
+                }
+            </div>
         </div>
     </div>
     <div class="product_photos-right">

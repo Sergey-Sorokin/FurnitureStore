@@ -1,0 +1,31 @@
+﻿@using FurnitureStore.Areas.Administration.ViewModels;
+@using FurnitureStore.ViewModels;
+@model PaginaionViewModel
+
+<div class="products-list" style="overflow:hidden;">
+    @foreach (FurnitureViewModel item in Model.Furnitures) {
+        <div class="products_i">
+            <a class="products_pic" href="@Url.Action("Details", new { id = item.ID })">
+                @Html.DisplayFor(modelItem => item.DisplayImage, new { Width = 300, Height = 200 })
+            </a>
+            <div class="products_content">
+                <p class="products_title">
+                    <a href="@Url.Action("Details", new { id = item.ID })">@Html.DisplayFor(modelItem => item.Name)</a>
+                </p>
+                <p>
+                    <span><span>Производитель: </span>@Html.DisplayFor(modelItem => item.Producer.FullName)</span>
+                </p>
+                <p class="price">@Html.DisplayFor(modelItem => item.Price)</p>
+                <p class="gray">
+                    <a class="gray" href="@Url.Action("Contact", "Home")">Салон офисной мебели «Welle-Company»</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>
+@if (Model.HasMoreItems) {
+    <div class="load-more">
+        <a class="button" data-behavior="load-next-page" data-url="@Url.Action("Index", "Furniture", new { page = Model.Page })" data-next-page="@Model.Page" href="@Url.Action("Index", "Furniture", new { page = Model.Page })">Смотреть еще @Model.ItemsPerPage предложений</a>
+    </div>
+}
+

@@ -33,5 +33,10 @@ namespace FurnitureStore.ViewModels {
             }
         }
 
+        public IEnumerable<HttpPostedFileBase> Files { get; set; }
+
+        public IEnumerable<int> CheckedImages { get; set; }
+
+
     }
 }

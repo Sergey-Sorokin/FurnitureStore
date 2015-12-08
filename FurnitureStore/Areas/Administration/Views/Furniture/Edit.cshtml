@@ -90,9 +90,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Images, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ValidationMessage("files", "", new { @class = "text-danger" })
+                @Html.ValidationMessage("Files", "", new { @class = "text-danger" })
                 <span class="btn btn-default btn-file">
-                    Загрузить<input type="file" name="files" multiple />
+                    Загрузить<input type="file" name="Files" multiple />
                 </span>
             </div>
         </div>
@@ -103,7 +103,7 @@
                     <div class="checkbox checkbox-primary">
                         @foreach (var img in Model.Images) {
                             @Html.DisplayFor(model => img, new { Width = 150 })
-                            <input type="checkbox" name="images" value="@img.ID" checked="checked" class="image-checkbox" />
+                            <input type="checkbox" name="CheckedImages" value="@img.ID" checked="checked" class="image-checkbox" />
                         }
                     </div>
                 </div>
@@ -138,6 +138,6 @@
 }
 
 @section Styles {
-    @Styles.Render("~/Content/datepicker");
+    @Styles.Render("~/Content/datepicker")
     @*<link href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">*@
 }

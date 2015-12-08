@@ -12,6 +12,7 @@ using System.IO;
 using System.Data.Entity.Validation;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
+    [Authorize()]
     public class FurnitureController : Controller {
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -20,23 +21,11 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             return View(db.Furnitures.Include(x => x.Producer).ToList());
         }
 
-        // GET: Furnitures/Details/5
-        public ActionResult Details(int? id) {
-            if (id == null) {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Furniture furniture = db.Furnitures.Find(id);
-            if (furniture == null) {
-                return HttpNotFound();
-            }
-            return View(furniture);
-        }
-
         // GET: Furnitures/Create
         public ActionResult Create() {
             var producers = db.Producers.ToList();
             var furniture = new FurnitureViewModel(producers);
-            furniture.PublishDate = DateTime.Now;
+            furniture.PublishDate = DateTime.Now.AddHours(12);
             return View(furniture);
         }
 
@@ -45,7 +34,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture, IEnumerable<HttpPostedFileBase> files) {
+        public ActionResult Create([Bind(Include = "Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files")] FurnitureViewModel furniture) {
             try {
                 if (ModelState.IsValid) {
                     using (var transaction = db.Database.BeginTransaction()) {
@@ -55,7 +44,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
                         db.Furnitures.Add(furniture);
                         db.SaveChanges();
 
-                        foreach (var file in files) {
+                        foreach (var file in furniture.Files) {
                             if (file != null && file.ContentLength > 0) {
                                 var fileName = Path.GetFileName(file.FileName);
                                 var path = Path.Combine(Server.MapPath("~/assets"), fileName);
@@ -101,27 +90,44 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating")] FurnitureViewModel furniture, IEnumerable<HttpPostedFileBase> files) {
+        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files,CheckedImages")] FurnitureViewModel furniture) {
             try {
                 if (ModelState.IsValid) {
                     using (var transaction = db.Database.BeginTransaction()) {
-                        foreach (var file in files) {
+                        // Attach object to context
+                        db.Entry(furniture).State = EntityState.Modified;
+                        // Load navigation properties
+                        db.Entry(furniture).Collection(i => i.Images).Load();
+
+                        // Deleted unchecked images 
+                        var imagesToRemove = new List<Image>();
+                        foreach (var image in furniture.Images) {
+                            if (furniture.CheckedImages == null || !furniture.CheckedImages.Contains(image.ID)) {
+                                imagesToRemove.Add(image);
+                            }
+                        }
+                        db.Images.RemoveRange(imagesToRemove);
+
+                        // Add new uploaded files
+                        foreach (var file in furniture.Files) {
                             if (file != null && file.ContentLength > 0) {
                                 var fileName = Path.GetFileName(file.FileName);
                                 var path = Path.Combine(Server.MapPath("~/assets"), fileName);
                                 file.SaveAs(path);
 
-                                db.Images.Add(new Image {
-                                    URL = fileName,
-                                    FurnitureID = furniture.ID
-                                });
+                                // Add only file that was not added before based on filename
+                                if (!furniture.Images.Any(i => i.URL == fileName)) {
+                                    db.Images.Add(new Image {
+                                        URL = fileName,
+                                        FurnitureID = furniture.ID
+                                    });
+                                }
                             }
                         }
 
                         furniture.UpdateUser = User.Identity.Name;
                         furniture.UpdateDate = DateTime.Now;
 
-                        db.Entry(furniture).State = EntityState.Modified;
                         db.SaveChanges();
                         transaction.Commit();
                     }
@@ -131,6 +137,9 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             }
             catch (DataException dex) {
                 ModelState.AddModelError("", dex.Message);
+            }
+            catch (Exception ex) {
+                ModelState.AddModelError("", ex.Message);
             }
 
             furniture.Producers = db.Producers.ToList();

@@ -40,10 +40,20 @@ span {
     padding: 0 0 0 0;
   }*/
 
+.content_i {
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+.layout_main {
+    margin: 0 auto;
+    position: relative;
+}
+
 .products-list {
     overflow: hidden;
     margin-left: -20px;
-    padding-top: 20px;
     font-size: 0;
 }
 
@@ -115,17 +125,6 @@ a.gray, .gray {
     background-color: #f0f0f0;
 }*/
 
-.content_i {
-    position: relative;
-    padding-top: 36px;
-    padding-bottom: 36px;
-}
-
-.layout_main {
-    margin: 0 auto;
-    position: relative;
-}
-
 .product_description-left {
     width: 35%;
     float: left;
@@ -135,6 +134,10 @@ a.gray, .gray {
     width: 59%;
     float: left;
     margin-left: 5%;
+}
+
+.product_text+.product_description {
+    margin-top: 18px;
 }
 
 .clearfix {
@@ -168,4 +171,50 @@ a.gray, .gray {
     vertical-align: top;
     width: 20px;
     height: 20px;
+}
+
+.load-more {
+    position: absolute;
+    text-align: center;
+    height: 70px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 -44px 29px white;
+    border-left: 20px solid #fff;
+    border-right: 20px solid #fff;
+}
+
+.load-more a {
+    display: inline-block;
+    position: relative;
+    z-index: 10;
+    margin-top: 20px;
+}
+
+.load-more:after {
+    height: 2px;
+    background-color: #ececec;
+    content: '';
+    position: absolute;
+    bottom: 28px;
+    left: 0;
+    right: 0;
+    z-index: 9;
+}
+
+a.button {
+    display: inline-block;
+    line-height: 40px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #bdc3c7;
+    padding: 0 24px;
+    text-decoration: none;
+}
+
+a.button.blue {
+    background-color: #48a5d4;
 }

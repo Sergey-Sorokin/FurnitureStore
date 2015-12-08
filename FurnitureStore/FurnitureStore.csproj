@@ -222,6 +222,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApplicationDbContext.Views1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Administration\ViewModels\PaginaionViewModel.cs" />
     <Compile Include="Migrations\201511301022532_FurnitureChange.cs" />
     <Compile Include="Migrations\201511301022532_FurnitureChange.Designer.cs">
       <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
@@ -432,6 +433,7 @@
     <Content Include="Views\Shared\DisplayTemplates\Image.cshtml" />
     <Content Include="Views\Furniture\Details.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\Furniture\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

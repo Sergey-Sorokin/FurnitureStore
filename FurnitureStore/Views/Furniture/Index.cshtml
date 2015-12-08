@@ -1,6 +1,5 @@
-﻿@using FurnitureStore.ViewModels;
-@using FurnitureStore.Models;
-@model IEnumerable<Furniture>
+﻿@using FurnitureStore.Areas.Administration.ViewModels;
+@model PaginaionViewModel
 
 @{
     ViewBag.Title = "Мебель";
@@ -8,24 +7,52 @@
 
 <h2>Предложения</h2>
 
-<div class="products-list" style="overflow:hidden;">
-    @foreach (FurnitureViewModel item in Model) {
-        <div class="products_i">
-            <a class="products_pic" href="@Url.Action("Details", new { id = item.ID })">
-                @Html.DisplayFor(modelItem => item.DisplayImage, new { Width = 300, Height = 200 })
-            </a>
-            <div class="products_content">
-                <p class="products_title">
-                    <a href="@Url.Action("Details", new { id = item.ID })">@Html.DisplayFor(modelItem => item.Name)</a>
-                </p>
-                <p>
-                    <span><span>Производитель: </span>@Html.DisplayFor(modelItem => item.Producer.FullName)</span>
-                </p>
-                <p class="price">@Html.DisplayFor(modelItem => item.Price)</p>
-                <p class="gray">
-                    <a class="gray" href="@Url.Action("Contact", "Home")">Салон офисной мебели «Welle-Company»</a>
-                </p>
-            </div>
-        </div>
+<section class="content_i">
+    @{
+        Html.RenderPartial("_Index", Model);
     }
-</div>
+</section>
+
+@if (Model.HasMoreItems) {
+    @section Scripts {
+        <script type="text/javascript">
+            (function () {
+                $(function () {
+                    return $(document).on('click', '[data-behavior=load-next-page]', function (e) {
+                        var $next_btn, next_page, url;
+                        e.preventDefault();
+                        $next_btn = $(this);
+                        url = $next_btn.data('url');
+                        next_page = $next_btn.data('next-page');
+                        if ($next_btn.hasClass("disabled")) {
+                            return;
+                        }
+                        $next_btn.addClass("disabled").data("old-title", $next_btn.text()).text("Загружаю предложения...");
+                        return $.ajax(url, {
+                            type: 'GET',
+                            dataType: 'html',
+                            data: {
+                                page: next_page
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                return alert('Ой! На сервере, что-то случилось! :`-(');
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                var $new;
+                                $new = $(data);
+                                $new.insertAfter($('.products-list:last'));
+                                //$new.find(".styler").styler();
+                                //$new.filter(".content_i").appendTo($(document).find(".content"));
+                                return $next_btn.closest(".load-more").remove();
+                            },
+                            error: function () {
+                                return $next_btn.removeClass("disabled").text($next_btn.data("old-title"));
+                            }
+                        });
+                    });
+                });
+
+            }).call(this);
+        </script>
+    }
+}
