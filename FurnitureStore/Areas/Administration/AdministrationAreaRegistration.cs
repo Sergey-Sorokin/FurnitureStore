@@ -15,13 +15,6 @@ namespace FurnitureStore.Areas.Administration {
                 new { controller = "Furniture", action = "Index", id = UrlParameter.Optional },
                 new[] { "FurnitureStore.Areas.Administration.Controllers" }
             );
-
-            //context.MapRoute(
-            //    "Administration_Furniture",
-            //    "Administration/Furniture/{action}/{id}",
-            //    new { controller = "Furniture", action = "Index", id = UrlParameter.Optional },
-            //    new[] { "FurnitureStore.Areas.Administration.Controllers" }
-            //);
         }
     }
 }

@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<views MappingHash="4113a7b25e2a4150a8f353fc4b7286c44e25ff00e3e9eef2dda0b22bf1eca075">
+  <view extent="CodeFirstDatabase.Furniture"><![CDATA[
+    SELECT VALUE -- Constructing Furniture
+        [CodeFirstDatabaseSchema.Furniture](T2.Furniture_ID, T2.Furniture_Name, T2.Furniture_PublishDate, T2.Furniture_Description, T2.Furniture_ArticleNo, T2.Furniture_Price, T2.Furniture_Size, T2.Furniture_Color, T2.Furniture_Rating, T2.Furniture_ProducerID, T2.Furniture_CreateUser, T2.Furniture_CreateDate, T2.Furniture_UpdateUser, T2.Furniture_UpdateDate, T2.Furniture_Discriminator)
+    FROM (
+        SELECT -- Constructing Discriminator
+            T1.Furniture_ID, 
+            T1.Furniture_Name, 
+            T1.Furniture_PublishDate, 
+            T1.Furniture_Description, 
+            T1.Furniture_ArticleNo, 
+            T1.Furniture_Price, 
+            T1.Furniture_Size, 
+            T1.Furniture_Color, 
+            T1.Furniture_Rating, 
+            T1.Furniture_ProducerID, 
+            T1.Furniture_CreateUser, 
+            T1.Furniture_CreateDate, 
+            T1.Furniture_UpdateUser, 
+            T1.Furniture_UpdateDate, 
+            CASE
+                WHEN T1._from1 THEN N'FurnitureViewModel'
+                ELSE N'Furniture'
+            END AS Furniture_Discriminator
+        FROM (
+            SELECT 
+                T.ID AS Furniture_ID, 
+                T.Name AS Furniture_Name, 
+                T.PublishDate AS Furniture_PublishDate, 
+                T.Description AS Furniture_Description, 
+                T.ArticleNo AS Furniture_ArticleNo, 
+                T.Price AS Furniture_Price, 
+                T.Size AS Furniture_Size, 
+                T.Color AS Furniture_Color, 
+                T.Rating AS Furniture_Rating, 
+                T.ProducerID AS Furniture_ProducerID, 
+                T.CreateUser AS Furniture_CreateUser, 
+                T.CreateDate AS Furniture_CreateDate, 
+                T.UpdateUser AS Furniture_UpdateUser, 
+                T.UpdateDate AS Furniture_UpdateDate, 
+                True AS _from0, 
+                CASE WHEN T IS OF (ONLY [FurnitureStore.Models.FurnitureViewModel]) THEN True ELSE False END AS _from1, 
+                CASE WHEN T IS OF (ONLY [FurnitureStore.Models.Furniture]) THEN True ELSE False END AS _from2
+            FROM ApplicationDbContext.Furnitures AS T
+        ) AS T1
+    ) AS T2]]></view>
+  <view extent="CodeFirstDatabase.Image"><![CDATA[
+    SELECT VALUE -- Constructing Image
+        [CodeFirstDatabaseSchema.Image](T1.Image_ID, T1.Image_URL, T1.Image_FurnitureID)
+    FROM (
+        SELECT 
+            T.ID AS Image_ID, 
+            T.URL AS Image_URL, 
+            T.FurnitureID AS Image_FurnitureID, 
+            True AS _from0
+        FROM ApplicationDbContext.Images AS T
+    ) AS T1]]></view>
+  <view extent="CodeFirstDatabase.Producer"><![CDATA[
+    SELECT VALUE -- Constructing Producer
+        [CodeFirstDatabaseSchema.Producer](T1.Producer_ID, T1.Producer_Country, T1.Producer_Name)
+    FROM (
+        SELECT 
+            T.ID AS Producer_ID, 
+            T.Country AS Producer_Country, 
+            T.Name AS Producer_Name, 
+            True AS _from0
+        FROM ApplicationDbContext.Producers AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.Furnitures"><![CDATA[
+    SELECT VALUE -- Constructing Furnitures
+        CASE
+            WHEN T1._from2 THEN [FurnitureStore.Models.Furniture](T1.Furniture_ID, T1.Furniture_Name, T1.Furniture_PublishDate, T1.Furniture_Description, T1.Furniture_ArticleNo, T1.Furniture_Price, T1.Furniture_Size, T1.Furniture_Color, T1.Furniture_Rating, T1.Furniture_ProducerID, T1.Furniture_CreateUser, T1.Furniture_CreateDate, T1.Furniture_UpdateUser, T1.Furniture_UpdateDate)
+            ELSE [FurnitureStore.Models.FurnitureViewModel](T1.Furniture_ID, T1.Furniture_Name, T1.Furniture_PublishDate, T1.Furniture_Description, T1.Furniture_ArticleNo, T1.Furniture_Price, T1.Furniture_Size, T1.Furniture_Color, T1.Furniture_Rating, T1.Furniture_ProducerID, T1.Furniture_CreateUser, T1.Furniture_CreateDate, T1.Furniture_UpdateUser, T1.Furniture_UpdateDate)
+        END
+    FROM (
+        SELECT 
+            T.ID AS Furniture_ID, 
+            T.Name AS Furniture_Name, 
+            T.PublishDate AS Furniture_PublishDate, 
+            T.Description AS Furniture_Description, 
+            T.ArticleNo AS Furniture_ArticleNo, 
+            T.Price AS Furniture_Price, 
+            T.Size AS Furniture_Size, 
+            T.Color AS Furniture_Color, 
+            T.Rating AS Furniture_Rating, 
+            T.ProducerID AS Furniture_ProducerID, 
+            T.CreateUser AS Furniture_CreateUser, 
+            T.CreateDate AS Furniture_CreateDate, 
+            T.UpdateUser AS Furniture_UpdateUser, 
+            T.UpdateDate AS Furniture_UpdateDate, 
+            True AS _from0, 
+            CASE WHEN T.Discriminator = N'FurnitureViewModel' THEN True ELSE False END AS _from1, 
+            CASE WHEN T.Discriminator = N'Furniture' THEN True ELSE False END AS _from2
+        FROM CodeFirstDatabase.Furniture AS T
+        WHERE T.Discriminator IN {N'FurnitureViewModel', N'Furniture'}
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.Images"><![CDATA[
+    SELECT VALUE -- Constructing Images
+        [FurnitureStore.Models.Image](T1.Image_ID, T1.Image_URL, T1.Image_FurnitureID)
+    FROM (
+        SELECT 
+            T.ID AS Image_ID, 
+            T.URL AS Image_URL, 
+            T.FurnitureID AS Image_FurnitureID, 
+            True AS _from0
+        FROM CodeFirstDatabase.Image AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.Producers"><![CDATA[
+    SELECT VALUE -- Constructing Producers
+        [FurnitureStore.Models.Producer](T1.Producer_ID, T1.Producer_Country, T1.Producer_Name)
+    FROM (
+        SELECT 
+            T.ID AS Producer_ID, 
+            T.Country AS Producer_Country, 
+            T.Name AS Producer_Name, 
+            True AS _from0
+        FROM CodeFirstDatabase.Producer AS T
+    ) AS T1]]></view>
+  <view extent="CodeFirstDatabase.IdentityRole"><![CDATA[
+    SELECT VALUE -- Constructing IdentityRole
+        [CodeFirstDatabaseSchema.IdentityRole](T2.IdentityRole_Id, T2.IdentityRole_Name, T2.IdentityRole_Description, T2.IdentityRole_Discriminator)
+    FROM (
+        SELECT -- Constructing Discriminator
+            T1.IdentityRole_Id, 
+            T1.IdentityRole_Name, 
+            T1.IdentityRole_Description, 
+            CASE
+                WHEN T1._from0 THEN N'ApplicationRole'
+                ELSE N'IdentityRole'
+            END AS IdentityRole_Discriminator
+        FROM (
+            SELECT 
+                T.Id AS IdentityRole_Id, 
+                T.Name AS IdentityRole_Name, 
+                TREAT(T AS [FurnitureStore.Models.ApplicationRole]).Description AS IdentityRole_Description, 
+                CASE WHEN T IS OF (ONLY [FurnitureStore.Models.ApplicationRole]) THEN True ELSE False END AS _from0, 
+                True AS _from1, 
+                CASE WHEN T IS OF (ONLY [FurnitureStore.Models.IdentityRole]) THEN True ELSE False END AS _from2
+            FROM ApplicationDbContext.Roles AS T
+        ) AS T1
+    ) AS T2]]></view>
+  <view extent="CodeFirstDatabase.IdentityUserRole"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserRole
+        [CodeFirstDatabaseSchema.IdentityUserRole](T1.IdentityUserRole_UserId, T1.IdentityUserRole_RoleId)
+    FROM (
+        SELECT 
+            T.UserId AS IdentityUserRole_UserId, 
+            T.RoleId AS IdentityUserRole_RoleId, 
+            True AS _from0
+        FROM ApplicationDbContext.IdentityUserRoles AS T
+    ) AS T1]]></view>
+  <view extent="CodeFirstDatabase.ApplicationUser"><![CDATA[
+    SELECT VALUE -- Constructing ApplicationUser
+        [CodeFirstDatabaseSchema.ApplicationUser](T1.ApplicationUser_Id, T1.ApplicationUser_Email, T1.ApplicationUser_EmailConfirmed, T1.ApplicationUser_PasswordHash, T1.ApplicationUser_SecurityStamp, T1.ApplicationUser_PhoneNumber, T1.ApplicationUser_PhoneNumberConfirmed, T1.ApplicationUser_TwoFactorEnabled, T1.ApplicationUser_LockoutEndDateUtc, T1.ApplicationUser_LockoutEnabled, T1.ApplicationUser_AccessFailedCount, T1.ApplicationUser_UserName)
+    FROM (
+        SELECT 
+            T.Id AS ApplicationUser_Id, 
+            T.Email AS ApplicationUser_Email, 
+            T.EmailConfirmed AS ApplicationUser_EmailConfirmed, 
+            T.PasswordHash AS ApplicationUser_PasswordHash, 
+            T.SecurityStamp AS ApplicationUser_SecurityStamp, 
+            T.PhoneNumber AS ApplicationUser_PhoneNumber, 
+            T.PhoneNumberConfirmed AS ApplicationUser_PhoneNumberConfirmed, 
+            T.TwoFactorEnabled AS ApplicationUser_TwoFactorEnabled, 
+            T.LockoutEndDateUtc AS ApplicationUser_LockoutEndDateUtc, 
+            T.LockoutEnabled AS ApplicationUser_LockoutEnabled, 
+            T.AccessFailedCount AS ApplicationUser_AccessFailedCount, 
+            T.UserName AS ApplicationUser_UserName, 
+            True AS _from0
+        FROM ApplicationDbContext.Users AS T
+    ) AS T1]]></view>
+  <view extent="CodeFirstDatabase.IdentityUserClaim"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserClaim
+        [CodeFirstDatabaseSchema.IdentityUserClaim](T1.IdentityUserClaim_Id, T1.IdentityUserClaim_UserId, T1.IdentityUserClaim_ClaimType, T1.IdentityUserClaim_ClaimValue)
+    FROM (
+        SELECT 
+            T.Id AS IdentityUserClaim_Id, 
+            T.UserId AS IdentityUserClaim_UserId, 
+            T.ClaimType AS IdentityUserClaim_ClaimType, 
+            T.ClaimValue AS IdentityUserClaim_ClaimValue, 
+            True AS _from0
+        FROM ApplicationDbContext.IdentityUserClaims AS T
+    ) AS T1]]></view>
+  <view extent="CodeFirstDatabase.IdentityUserLogin"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserLogin
+        [CodeFirstDatabaseSchema.IdentityUserLogin](T1.IdentityUserLogin_LoginProvider, T1.IdentityUserLogin_ProviderKey, T1.IdentityUserLogin_UserId)
+    FROM (
+        SELECT 
+            T.LoginProvider AS IdentityUserLogin_LoginProvider, 
+            T.ProviderKey AS IdentityUserLogin_ProviderKey, 
+            T.UserId AS IdentityUserLogin_UserId, 
+            True AS _from0
+        FROM ApplicationDbContext.IdentityUserLogins AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.Roles"><![CDATA[
+    SELECT VALUE -- Constructing Roles
+        CASE
+            WHEN T1._from2 THEN [FurnitureStore.Models.IdentityRole](T1.IdentityRole_Id, T1.IdentityRole_Name)
+            ELSE [FurnitureStore.Models.ApplicationRole](T1.IdentityRole_Id, T1.IdentityRole_Name, T1.ApplicationRole_Description)
+        END
+    FROM (
+        SELECT 
+            T.Id AS IdentityRole_Id, 
+            T.Name AS IdentityRole_Name, 
+            T.Description AS ApplicationRole_Description, 
+            True AS _from0, 
+            CASE WHEN T.Discriminator = N'ApplicationRole' THEN True ELSE False END AS _from1, 
+            CASE WHEN T.Discriminator = N'IdentityRole' THEN True ELSE False END AS _from2
+        FROM CodeFirstDatabase.IdentityRole AS T
+        WHERE T.Discriminator IN {N'ApplicationRole', N'IdentityRole'}
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.IdentityUserRoles"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserRoles
+        [FurnitureStore.Models.IdentityUserRole](T1.IdentityUserRole_UserId, T1.IdentityUserRole_RoleId)
+    FROM (
+        SELECT 
+            T.UserId AS IdentityUserRole_UserId, 
+            T.RoleId AS IdentityUserRole_RoleId, 
+            True AS _from0
+        FROM CodeFirstDatabase.IdentityUserRole AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.Users"><![CDATA[
+    SELECT VALUE -- Constructing Users
+        [FurnitureStore.Models.ApplicationUser](T1.ApplicationUser_Id, T1.ApplicationUser_Email, T1.ApplicationUser_EmailConfirmed, T1.ApplicationUser_PasswordHash, T1.ApplicationUser_SecurityStamp, T1.ApplicationUser_PhoneNumber, T1.ApplicationUser_PhoneNumberConfirmed, T1.ApplicationUser_TwoFactorEnabled, T1.ApplicationUser_LockoutEndDateUtc, T1.ApplicationUser_LockoutEnabled, T1.ApplicationUser_AccessFailedCount, T1.ApplicationUser_UserName)
+    FROM (
+        SELECT 
+            T.Id AS ApplicationUser_Id, 
+            T.Email AS ApplicationUser_Email, 
+            T.EmailConfirmed AS ApplicationUser_EmailConfirmed, 
+            T.PasswordHash AS ApplicationUser_PasswordHash, 
+            T.SecurityStamp AS ApplicationUser_SecurityStamp, 
+            T.PhoneNumber AS ApplicationUser_PhoneNumber, 
+            T.PhoneNumberConfirmed AS ApplicationUser_PhoneNumberConfirmed, 
+            T.TwoFactorEnabled AS ApplicationUser_TwoFactorEnabled, 
+            T.LockoutEndDateUtc AS ApplicationUser_LockoutEndDateUtc, 
+            T.LockoutEnabled AS ApplicationUser_LockoutEnabled, 
+            T.AccessFailedCount AS ApplicationUser_AccessFailedCount, 
+            T.UserName AS ApplicationUser_UserName, 
+            True AS _from0
+        FROM CodeFirstDatabase.ApplicationUser AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.IdentityUserClaims"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserClaims
+        [FurnitureStore.Models.IdentityUserClaim](T1.IdentityUserClaim_Id, T1.IdentityUserClaim_UserId, T1.IdentityUserClaim_ClaimType, T1.IdentityUserClaim_ClaimValue)
+    FROM (
+        SELECT 
+            T.Id AS IdentityUserClaim_Id, 
+            T.UserId AS IdentityUserClaim_UserId, 
+            T.ClaimType AS IdentityUserClaim_ClaimType, 
+            T.ClaimValue AS IdentityUserClaim_ClaimValue, 
+            True AS _from0
+        FROM CodeFirstDatabase.IdentityUserClaim AS T
+    ) AS T1]]></view>
+  <view extent="ApplicationDbContext.IdentityUserLogins"><![CDATA[
+    SELECT VALUE -- Constructing IdentityUserLogins
+        [FurnitureStore.Models.IdentityUserLogin](T1.IdentityUserLogin_LoginProvider, T1.IdentityUserLogin_ProviderKey, T1.IdentityUserLogin_UserId)
+    FROM (
+        SELECT 
+            T.LoginProvider AS IdentityUserLogin_LoginProvider, 
+            T.ProviderKey AS IdentityUserLogin_ProviderKey, 
+            T.UserId AS IdentityUserLogin_UserId, 
+            True AS _from0
+        FROM CodeFirstDatabase.IdentityUserLogin AS T
+    ) AS T1]]></view>
+</views>

@@ -2,6 +2,7 @@
 using FurnitureStore.Models;
 
 namespace FurnitureStore.Areas.Administration.ViewModels {
+
     public class PaginaionViewModel {
 
         public IEnumerable<Furniture> Furnitures { get; set; }

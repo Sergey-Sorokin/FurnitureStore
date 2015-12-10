@@ -9,9 +9,9 @@ namespace FurnitureStore.Ninject {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public override void Load() {
-            logger.Info("[Start] Load");
+            logger.Info("[Start]");
             Bind<ApplicationDbContext>().ToSelf();
-            logger.Info("[End] Load");
+            logger.Info("[End]");
         }
 
     }

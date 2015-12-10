@@ -216,49 +216,38 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\ProducerController.cs" />
+    <Compile Include="Areas\Administration\Models\AuthorizeWithRedirectAttribute.cs" />
     <Compile Include="Areas\Administration\ViewModels\ControlViewModel.cs" />
-    <Compile Include="ApplicationDbContext.Views1.cs">
+    <Compile Include="ApplicationDbContext.Views.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ApplicationDbContext.Views1.tt</DependentUpon>
+      <DependentUpon>ApplicationDbContext.Views.tt</DependentUpon>
     </Compile>
     <Compile Include="Areas\Administration\ViewModels\PaginaionViewModel.cs" />
-    <Compile Include="Migrations\201511301022532_FurnitureChange.cs" />
-    <Compile Include="Migrations\201511301022532_FurnitureChange.Designer.cs">
-      <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512030458062_ColorSizeDataTypeChange.cs" />
-    <Compile Include="Migrations\201512030458062_ColorSizeDataTypeChange.Designer.cs">
-      <DependentUpon>201512030458062_ColorSizeDataTypeChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512030809376_GoogleAuthChange.cs" />
-    <Compile Include="Migrations\201512030809376_GoogleAuthChange.Designer.cs">
-      <DependentUpon>201512030809376_GoogleAuthChange.cs</DependentUpon>
-    </Compile>
     <Compile Include="Ninject\FurnitureNinjectModule.cs" />
     <Compile Include="ViewModels\FurnitureViewModel.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Areas\Administration\Controllers\AccountController.cs" />
     <Compile Include="Areas\Administration\Controllers\FurnitureController.cs" />
     <Compile Include="Controllers\FurnitureController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Areas\Administration\Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="ViewModels\AccountViewModels.cs" />
+    <Compile Include="Areas\Administration\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Furniture.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Areas\Administration\Models\IdentityModels.cs" />
     <Compile Include="Models\Image.cs" />
-    <Compile Include="ViewModels\ManageViewModels.cs" />
+    <Compile Include="Areas\Administration\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ApplicationDbContext.Views1.xml">
-      <DependentUpon>ApplicationDbContext.Views1.tt</DependentUpon>
+    <EmbeddedResource Include="ApplicationDbContext.Views.xml">
+      <DependentUpon>ApplicationDbContext.Views.tt</DependentUpon>
     </EmbeddedResource>
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-datepicker.min.css" />
@@ -272,9 +261,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="ApplicationDbContext.Views1.tt">
+    <Content Include="ApplicationDbContext.Views.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ApplicationDbContext.Views1.cs</LastGenOutput>
+      <LastGenOutput>ApplicationDbContext.Views.cs</LastGenOutput>
     </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -299,6 +288,9 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Areas\Administration\Views\Shared\_ControlPartial.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Index.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Roles.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\Unauthorized.cshtml" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -405,26 +397,26 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Login.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Register.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ResetPassword.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\SendCode.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\VerifyCode.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\Index.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\SetPassword.cshtml" />
+    <Content Include="Areas\Administration\Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\Lockout.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Create.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Delete.cshtml" />
     <Content Include="Areas\Administration\Views\Furniture\Edit.cshtml" />
@@ -437,23 +429,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Administration\Models\" />
-    <Folder Include="Areas\Administration\Views\Shared\EditorTemplates\" />
     <Folder Include="Models\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201511301022532_FurnitureChange.resx">
-      <DependentUpon>201511301022532_FurnitureChange.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512030458062_ColorSizeDataTypeChange.resx">
-      <DependentUpon>201512030458062_ColorSizeDataTypeChange.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512030809376_GoogleAuthChange.resx">
-      <DependentUpon>201512030809376_GoogleAuthChange.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

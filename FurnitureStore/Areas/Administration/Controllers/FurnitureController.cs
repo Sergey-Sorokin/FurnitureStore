@@ -6,10 +6,9 @@ using System.Net;
 using System.Web.Mvc;
 using FurnitureStore.ViewModels;
 using FurnitureStore.Models;
-using System.Web;
 using System.Collections.Generic;
 using System.IO;
-using System.Data.Entity.Validation;
+using FurnitureStore.Areas.Administration.Models;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
     [Authorize()]
@@ -17,11 +16,13 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Furnitures
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture, CanDeleteFurtiture")]
         public ActionResult Index() {
             return View(db.Furnitures.Include(x => x.Producer).ToList());
         }
 
         // GET: Furnitures/Create
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
         public ActionResult Create() {
             var producers = db.Producers.ToList();
             var furniture = new FurnitureViewModel(producers);
@@ -34,6 +35,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
         public ActionResult Create([Bind(Include = "Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files")] FurnitureViewModel furniture) {
             try {
                 if (ModelState.IsValid) {
@@ -73,6 +75,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         }
 
         // GET: Furnitures/Edit/5
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
         public ActionResult Edit(int? id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -90,6 +93,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
         public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files,CheckedImages")] FurnitureViewModel furniture) {
             try {
                 if (ModelState.IsValid) {
@@ -147,6 +151,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         }
 
         // GET: Furnitures/Delete/5
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanDeleteFurtiture")]
         public ActionResult Delete(int? id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -161,6 +166,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // POST: Furnitures/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanDeleteFurtiture")]
         public ActionResult DeleteConfirmed(int id) {
             Furniture furniture = db.Furnitures.Find(id);
             db.Furnitures.Remove(furniture);

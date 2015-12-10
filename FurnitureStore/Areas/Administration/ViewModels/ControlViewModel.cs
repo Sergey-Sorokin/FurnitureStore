@@ -12,8 +12,6 @@ namespace FurnitureStore.Areas.Administration.ViewModels {
 
     public class ControlViewModel {
 
-
-
         public Actions Actions { get; set; }
 
         public int ID { get; set; }
