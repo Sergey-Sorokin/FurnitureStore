@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FurnitureStore.Models;
-using FurnitureStore.ViewModels;
 using FurnitureStore.Areas.Administration.ViewModels;
 
 namespace FurnitureStore.Areas.Administration.Controllers {

@@ -39,6 +39,11 @@ namespace FurnitureStore {
             bundles.Add(new ScriptBundle("~/bundles/globalization").Include(
                 "~/Scripts/cldr.js",
                 "~/Scripts/globalize.js"));
+
+            // Google Analytics
+
+            bundles.Add(new ScriptBundle("~/bundles/google").Include(
+                "~/Scripts/google-analytics.js"));
         }
     }
 }

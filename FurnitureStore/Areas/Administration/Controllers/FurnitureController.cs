@@ -4,11 +4,11 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using FurnitureStore.ViewModels;
 using FurnitureStore.Models;
 using System.Collections.Generic;
 using System.IO;
 using FurnitureStore.Areas.Administration.Models;
+using FurnitureStore.Areas.Administration.ViewModels;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
     [Authorize()]

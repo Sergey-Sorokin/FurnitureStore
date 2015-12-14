@@ -16,7 +16,7 @@ using System.Net;
 using NLog;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
-    [Authorize]
+    [AuthorizeWithRedirect]
     public class AccountController : Controller {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -69,7 +69,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
 
         // GET: /Account/Roles/5
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
-        public async Task<ActionResult> Roles(string id) {
+        public async Task<ActionResult> Edit(string id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -97,24 +97,36 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // POST: /Account/Roles
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         [HttpPost]
-        public async Task<ActionResult> Roles(AccountRolesViewModel model) {
+        public async Task<ActionResult> Edit(AccountRolesViewModel model) {
             if (ModelState.IsValid) {
                 var user = UserManager.FindById(model.User.Id);
                 if (user == null) {
                     return HttpNotFound();
                 }
-
+                logger.Info("User is found: {0}", user);
                 IdentityResult result = null;
-                foreach (var role in await UserManager.GetRolesAsync(user.Id)) {
-                    logger.Debug("role: {0}", role);
-                    result = await UserManager.RemoveFromRoleAsync(user.Id, role);
-                    logger.Debug("result: {0}", result.Succeeded);
-                }
 
-                result = await UserManager.AddToRolesAsync(user.Id, model.Roles.Where(x => x.Checked).Select(x => x.Name).ToArray());
-                logger.Debug("result: {0}", result.Succeeded);
-                if (result.Succeeded)
-                    return RedirectToAction("index");
+                logger.Debug("Change UserName from {0} to {1}", user.UserName, model.User.UserName);
+                user.UserName = model.User.UserName;
+                logger.Debug("Change PhoneNumber from {0} to {1}", user.PhoneNumber, model.User.PhoneNumber);
+                user.PhoneNumber = model.User.PhoneNumber;
+                logger.Debug("Change Email from {0} to {1}", user.Email, model.User.Email);
+                user.Email = model.User.Email;
+                
+                result = await UserManager.UpdateAsync(user);
+                logger.Debug("Update result: {0}", result.Succeeded);
+                if (result.Succeeded) {
+                    foreach (var role in await UserManager.GetRolesAsync(user.Id)) {
+                        logger.Debug("role: {0}", role);
+                        result = await UserManager.RemoveFromRoleAsync(user.Id, role);
+                        logger.Debug("RemoveFromRole result: {0}", result.Succeeded);
+                    }
+
+                    result = await UserManager.AddToRolesAsync(user.Id, model.Roles.Where(x => x.Checked).Select(x => x.Name).ToArray());
+                    logger.Debug("AddToRoles result: {0}", result.Succeeded);
+                    if (result.Succeeded)
+                        return RedirectToAction("index");
+                }
 
                 AddErrors(result);
             }
@@ -198,6 +210,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
 
         // GET: /Account/Register
         [AllowAnonymous]
+        [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         public ActionResult Register() {
             return View();
         }
@@ -207,12 +220,13 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         public async Task<ActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // Дополнительные сведения о том, как включить подтверждение учетной записи и сброс пароля, см. по адресу: http://go.microsoft.com/fwlink/?LinkID=320771
                     // Отправка сообщения электронной почты с этой ссылкой

@@ -225,7 +225,7 @@
     </Compile>
     <Compile Include="Areas\Administration\ViewModels\PaginaionViewModel.cs" />
     <Compile Include="Ninject\FurnitureNinjectModule.cs" />
-    <Compile Include="ViewModels\FurnitureViewModel.cs" />
+    <Compile Include="Areas\Administration\ViewModels\FurnitureViewModel.cs" />
     <Compile Include="Areas\Administration\Controllers\AccountController.cs" />
     <Compile Include="Areas\Administration\Controllers\FurnitureController.cs" />
     <Compile Include="Controllers\FurnitureController.cs" />
@@ -289,7 +289,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Areas\Administration\Views\Shared\_ControlPartial.cshtml" />
     <Content Include="Areas\Administration\Views\Account\Index.cshtml" />
-    <Content Include="Areas\Administration\Views\Account\Roles.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Shared\Unauthorized.cshtml" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -310,6 +310,7 @@
     <Content Include="Scripts\globalize\plural.js" />
     <Content Include="Scripts\globalize\relative-time.js" />
     <None Include="Scripts\jquery-2.1.4-vsdoc.js" />
+    <Content Include="Scripts\google-analytics.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -430,6 +431,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\Interfaces\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
