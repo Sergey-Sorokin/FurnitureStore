@@ -47,9 +47,13 @@
                 @Html.DisplayFor(modelItem => item.TwoFactorEnabled)
             </td>
             <td>
-                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-default" title="Роли">
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-default" title="Изменить">
                     <i class="glyphicon glyphicon-edit"></i>
-                    <span class="sr-only">Роли</span>
+                    <span class="sr-only">Изменить</span>
+                </a>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-default" title="Удалить">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span class="sr-only">Удалить</span>
                 </a>
             </td>
         </tr>

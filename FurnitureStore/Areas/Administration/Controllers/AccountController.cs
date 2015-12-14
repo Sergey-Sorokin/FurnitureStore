@@ -67,14 +67,14 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             return View(UserManager.Users.ToList());
         }
 
-        // GET: /Account/Roles/5
+        // GET: /Account/Edit/5
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         public async Task<ActionResult> Edit(string id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var user = UserManager.Users.FirstOrDefault(u => u.Id == id);
+            var user = await UserManager.FindByIdAsync(id);
             if (user == null) {
                 return HttpNotFound();
             }
@@ -94,7 +94,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             });
         }
 
-        // POST: /Account/Roles
+        // POST: /Account/Edit
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         [HttpPost]
         public async Task<ActionResult> Edit(AccountRolesViewModel model) {
@@ -103,7 +103,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
                 if (user == null) {
                     return HttpNotFound();
                 }
-                logger.Info("User is found: {0}", user);
+                logger.Info("User is found: {0}", user.UserName);
                 IdentityResult result = null;
 
                 logger.Debug("Change UserName from {0} to {1}", user.UserName, model.User.UserName);
@@ -112,12 +112,12 @@ namespace FurnitureStore.Areas.Administration.Controllers {
                 user.PhoneNumber = model.User.PhoneNumber;
                 logger.Debug("Change Email from {0} to {1}", user.Email, model.User.Email);
                 user.Email = model.User.Email;
-                
+
                 result = await UserManager.UpdateAsync(user);
                 logger.Debug("Update result: {0}", result.Succeeded);
                 if (result.Succeeded) {
                     foreach (var role in await UserManager.GetRolesAsync(user.Id)) {
-                        logger.Debug("role: {0}", role);
+                        logger.Debug("User role: {0}", role);
                         result = await UserManager.RemoveFromRoleAsync(user.Id, role);
                         logger.Debug("RemoveFromRole result: {0}", result.Succeeded);
                     }
@@ -132,6 +132,40 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             }
 
             return View(model);
+        }
+
+        // GET: /Account/Delete
+        [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
+        public async Task<ActionResult> Delete(string id) {
+            if (id == null) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null) {
+                return HttpNotFound();
+            }
+
+            return View(user);
+        }
+
+        // GET: /Account/Delete
+        [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanDeleteUser")]
+        [HttpPost]
+        public async Task<ActionResult> Delete(ApplicationUser appUser) {
+            if (appUser.Id == null) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(appUser.Id);
+            if (user == null) {
+                return HttpNotFound();
+            }
+
+            var result = await UserManager.DeleteAsync(user);
+            logger.Debug("Delete user: {0}", result.Succeeded);
+
+            return RedirectToAction("Index");
         }
 
         //
@@ -481,7 +515,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             if (Url.IsLocalUrl(returnUrl)) {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult {

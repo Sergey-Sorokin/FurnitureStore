@@ -291,6 +291,7 @@
     <Content Include="Areas\Administration\Views\Account\Index.cshtml" />
     <Content Include="Areas\Administration\Views\Account\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Shared\Unauthorized.cshtml" />
+    <Content Include="Areas\Administration\Views\Account\Delete.cshtml" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
