@@ -44,6 +44,11 @@ namespace FurnitureStore {
 
             bundles.Add(new ScriptBundle("~/bundles/google").Include(
                 "~/Scripts/google-analytics.js"));
+
+            // Somee Ad Remover
+
+            bundles.Add(new ScriptBundle("~/bundles/ads-remover").Include(
+                "~/Scripts/ads-remover.js"));
         }
     }
 }

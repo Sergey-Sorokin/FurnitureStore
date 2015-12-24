@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using FurnitureStore.Areas.Administration.Models;
 using FurnitureStore.Areas.Administration.ViewModels;
+using FurnitureStore.ViewModels;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
     [Authorize()]
@@ -18,7 +19,7 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // GET: Furnitures
         [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture, CanDeleteFurtiture")]
         public ActionResult Index() {
-            return View(db.Furnitures.Include(x => x.Producer).ToList());
+            return View(db.Furnitures.Include(x => x.Producer).OrderBy(x => x.Name).AsNoTracking().ToList());
         }
 
         // GET: Furnitures/Create

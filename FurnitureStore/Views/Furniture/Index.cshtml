@@ -1,5 +1,5 @@
-﻿@using FurnitureStore.Areas.Administration.ViewModels;
-@model PaginaionViewModel
+﻿@using FurnitureStore.ViewModels;
+@model PaginationViewModel
 
 @{
     ViewBag.Title = "Мебель";
@@ -8,8 +8,11 @@
 <h2>Предложения</h2>
 
 <section class="content_i">
-    @{
-        Html.RenderPartial("_Index", Model);
+    @Html.Partial("_Product", Model.Furnitures)
+    @if (Model.HasMoreItems) {
+        <div class="load-more">
+            <a class="button" data-behavior="load-next-page" data-url="@Url.Action("Index", "Furniture", new { page = Model.Page })" data-next-page="@Model.Page" href="@Url.Action("Index", "Furniture", new { page = Model.Page })">Смотреть еще @Model.ItemsPerPage предложений</a>
+        </div>
     }
 </section>
 
@@ -41,8 +44,6 @@
                                 var $new;
                                 $new = $(data);
                                 $new.insertAfter($('.products-list:last'));
-                                //$new.find(".styler").styler();
-                                //$new.filter(".content_i").appendTo($(document).find(".content"));
                                 return $next_btn.closest(".load-more").remove();
                             },
                             error: function () {

@@ -1,0 +1,26 @@
+﻿@using FurnitureStore.ViewModels;
+@model IEnumerable<FurnitureStore.Models.Furniture>
+
+    <div class="products-list" style="overflow:hidden;">
+        @foreach (FurnitureViewModel item in Model) {
+            <div class="products_i">
+                <a class="products_pic" href="@Url.Action("Details", "Furniture", new { id = item.ID })">
+                    @Html.DisplayFor(modelItem => item.DisplayImage, new { Width = 300, Height = 200 })
+                </a>
+                <div class="products_content">
+                    <p class="products_title">
+                        <a href="@Url.Action("Details", "Furniture", new { id = item.ID })">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </p>
+                    <p>
+                        <span><span>Производитель: </span>@Html.DisplayFor(modelItem => item.Producer.FullName)</span>
+                    </p>
+                    <p class="price">@Html.DisplayFor(modelItem => item.Price)</p>
+                    <p class="gray">
+                        <a class="gray" href="@Url.Action("Contact", "Home")">Салон офисной мебели «ВЕЛЛЕ Компани»</a>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+
+

@@ -12,10 +12,14 @@ namespace FurnitureStore.Controllers {
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         public ActionResult Index() {
             logger.Info("[Start]");
             try {
-                return View();
+                var furnitures = db.Furnitures.Include(f => f.Producer).Include(f => f.Images).
+                    OrderBy(c => Guid.NewGuid()).Take(3).AsNoTracking().ToList();
+                return View(furnitures);
             }
             catch (Exception ex) {
                 logger.Error(ex, ex.Message);

@@ -5,7 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using FurnitureStore.Models;
 using NLog;
-using FurnitureStore.Areas.Administration.ViewModels;
+using FurnitureStore.ViewModels;
 using System;
 
 namespace FurnitureStore.Controllers {
@@ -22,7 +22,7 @@ namespace FurnitureStore.Controllers {
             logger.Info("[Start]");
             try {
                 var furnitures = db.Furnitures.Include(f => f.Producer).Include(f => f.Images).
-                    OrderByDescending(o => o.PublishDate).OrderByDescending(o => o.ID).Skip(page * ItemsPerPage).Take(ItemsPerPage + 1).
+                    OrderByDescending(o => o.PublishDate).OrderByDescending(o => o.CreateDate).Skip(page * ItemsPerPage).Take(ItemsPerPage + 1).
                     AsNoTracking().ToList();
 
                 var hasMoreFurniture = false;
@@ -36,7 +36,7 @@ namespace FurnitureStore.Controllers {
                 logger.Debug("furnitures: {0}", furnitures);
                 logger.Debug("hasMoreFurniture: {0}", hasMoreFurniture);
                 logger.Debug("page: {0}", page);
-                var view = new PaginaionViewModel(furnitures, 3, page + 1, hasMoreFurniture);
+                var view = new PaginationViewModel(furnitures, 3, page + 1, hasMoreFurniture);
 
                 if (Request.IsAjaxRequest()) {
                     logger.Info("Ajax request");

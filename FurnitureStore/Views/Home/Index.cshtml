@@ -1,31 +1,16 @@
-﻿@{
+﻿@using FurnitureStore.ViewModels;
+@model IList<FurnitureStore.Models.Furniture>
+
+@{
     ViewBag.Title = "Мебель для офиса";
 }
 
 <div class="jumbotron">
-    <h1>Welle Company</h1>
-    <p class="lead">Каждый день 2,5 тысячи человек приходят на ВЕЛЛЕ Компани.KZ, чтобы присмотреть себе новый диван, спальный или кухонный гарнитур, мебель для детской или шкаф-купе. Некоторые ищут мебель для офиса или адрес мебельного салона.</p>
+    <h1>ВЕЛЛЕ Компани</h1>
+    <p class="lead">Каждый день 2,5 тысячи человек приходят на ВЕЛЛЕ Компани.KZ, чтобы присмотреть себе новый стол в офис, пенал или шкаф, мебель для офиса или бизнеса. Некоторые ищут мебель для офиса или адрес мебельного салона.</p>
     <p>@Html.ActionLink("Посмотреть все предложения", "Index", "Furniture", null, new { @class = "btn btn-primary btn-lg" })</p>
+</div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Готовая мебель</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p>@Html.ActionLink("Подробнее...", "Index", "Furniture", null, new { @class = "btn btn-default" })</p>
-        </div>
-        <div class="col-md-4">
-            <h2>Мебель на заказ</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p>@Html.ActionLink("Подробнее...", "Index", "Furniture", null, new { @class = "btn btn-default" })</p>
-        </div>
-        <div class="col-md-4">
-            <h2>Услуги</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p>@Html.ActionLink("Подробнее...", "Index", "Furniture", null, new { @class = "btn btn-default" })</p>
-        </div>
-    </div>
+<div class="row" style="background-color: #fff; margin-left: 20px;">
+    @Html.Partial("_Product", Model)
 </div>

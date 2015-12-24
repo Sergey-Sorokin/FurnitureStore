@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using FurnitureStore.Models;
 
-namespace FurnitureStore.Areas.Administration.ViewModels {
+namespace FurnitureStore.ViewModels {
     public class FurnitureViewModel : Furniture {
 
         public FurnitureViewModel(IEnumerable<Producer> producers) {
