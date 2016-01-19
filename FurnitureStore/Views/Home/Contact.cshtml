@@ -1,10 +1,12 @@
 ﻿@{
-    ViewBag.Title = "О салоне ТОО \"ВЕЛЛЕ Компани\"";
+    ViewBag.Title = "О салоне офисной мебели ВЕЛЛЕ Компани в Алматы";
+    ViewBag.MetaDescription = "Информация и контакты салона офисной мебели ВЕЛЛЕ Компани в Алматы";
+    ViewBag.MetaKeywords = "салон офисной мебели,салон офисной мебели Алматы,офисная мебель,офисная мебель Алматы,мебель,мебель Алматы,контакты ВЕЛЛЕ Компани";
 }
 <h2>ТОО "ВЕЛЛЕ Компани"</h2>
 
 <section>
-    <h3>Адрес:</h3>
+    <h3>Адрес салона:</h3>
     г. Алматы, м-он Баганашил, ул. Подгорная, д. 7, кв. 1
     <p><a href="#map">Смотреть на карте</a></p>
 </section>
@@ -17,38 +19,40 @@
     10:00–20:00, без выходных
 </section>
 @*<section>
-        <h3>Реквизиты для оплаты:</h3>
-        ТОО "ВЕЛЛЕ Компани"
-        БИН: 990540004212
-        ИИК: KZ088560000000014302 в АГФ АО "Банк ЦентКредит"
-        БИК: KCJBKZKX
-        Свидетельство о постановке на учет по НДС: Серия 60001 № 0078351 от 07.08.2012 г.
-        Директор: Федотов Виктор Васильевич
-    </section>*@
+    <h3>Реквизиты салона для оплаты:</h3>
+    ТОО "ВЕЛЛЕ Компани"
+    БИН: 990540004212
+    ИИК: KZ088560000000014302 в АГФ АО "Банк ЦентКредит"
+    БИК: KCJBKZKX
+    Свидетельство о постановке на учет по НДС: Серия 60001 № 0078351 от 07.08.2012 г.
+    Директор: Федотов Виктор Васильевич
+</section>*@
 <section>
     <h3>Салон офисной мебели "ВЕЛЛЕ Компани" на карте города</h3>
     <div id="map" class="map"></div>
 </section>
 
-<script src="http://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
-<script type="text/javascript">
-    ymaps.ready(init);
-    var myMap;
-    var myPlacemark;
+@section Scripts {
+    <script src="http://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var myMap;
+        var myPlacemark;
 
-    function init() {
-        myMap = new ymaps.Map("map", {
-            center: [43.196652, 76.91486],
-            zoom: 18,
-            controls: ["zoomControl"]
-        });
-        myPlacemark = new ymaps.Placemark(myMap.getCenter(), {
-            hintContent: 'ТОО "ВЕЛЛЕ Компани"',
-            balloonContentHeader: 'Информация',
-            balloonContentBody: 'Штаб-квартира ТОО "ВЕЛЛЕ Компани"'
-        }, {
-            preset: 'islands#nightCircleDotIcon'
-        });
-        myMap.geoObjects.add(myPlacemark);
-    }
-</script>
+        function init() {
+            myMap = new ymaps.Map("map", {
+                center: [43.196652, 76.91486],
+                zoom: 18,
+                controls: ["zoomControl"]
+            });
+            myPlacemark = new ymaps.Placemark(myMap.getCenter(), {
+                hintContent: 'ТОО "ВЕЛЛЕ Компани"',
+                balloonContentHeader: 'Информация',
+                balloonContentBody: 'Местоположение салона офисной мебели ВЕЛЛЕ Компани'
+            }, {
+                preset: 'islands#nightCircleDotIcon'
+            });
+            myMap.geoObjects.add(myPlacemark);
+        }
+    </script>
+}

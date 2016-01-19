@@ -1,50 +1,41 @@
-﻿using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
-using FurnitureStore.Models;
 using NLog;
-using FurnitureStore.ViewModels;
 using System;
+using FurnitureStore.Services;
+using System.Threading.Tasks;
 
 namespace FurnitureStore.Controllers {
     public class FurnitureController : Controller {
 
-        const int ItemsPerPage = 36;
+        private readonly FurnitureService service;
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        public FurnitureController(FurnitureService service) {
+            logger.Info("[Start]");
+            this.service = service;
+            logger.Debug("service: {0}", service);
+            logger.Info("[End]");
+
+        }
 
         // GET: Furniture?page=0
-        public ActionResult Index(int page = 0) {
+        public async Task<ActionResult> Index(int page = 0) {
             logger.Info("[Start]");
             try {
-                var furnitures = db.Furnitures.Include(f => f.Producer).Include(f => f.Images).
-                    OrderByDescending(o => o.PublishDate).OrderByDescending(o => o.CreateDate).Skip(page * ItemsPerPage).Take(ItemsPerPage + 1).
-                    AsNoTracking().ToList();
-
-                var hasMoreFurniture = false;
-                // Check is there are more furniture to be shown on second page
-                if (furnitures.Count > ItemsPerPage) {
-                    // As one more furniture was added in result, excluding it now
-                    furnitures.RemoveAt(ItemsPerPage);
-                    hasMoreFurniture = true;
-                }
-
-                logger.Debug("furnitures: {0}", furnitures);
-                logger.Debug("hasMoreFurniture: {0}", hasMoreFurniture);
+                logger.Debug("service: {0}", service);
                 logger.Debug("page: {0}", page);
-                var view = new PaginationViewModel(furnitures, 3, page + 1, hasMoreFurniture);
+                var view = await service.ListOrderedWithPaginationAsync(36, page);
 
+                // Ajax request sent to show additional furniture
                 if (Request.IsAjaxRequest()) {
                     logger.Info("Ajax request");
                     return PartialView("_Index", view);
+                } else {
+                    logger.Info("Non-ajax request");
+                    return View(view);
                 }
-
-                logger.Info("Non-ajax request");
-                return View(view);
             }
             catch (Exception ex) {
                 logger.Error(ex, ex.Message);
@@ -56,14 +47,17 @@ namespace FurnitureStore.Controllers {
         }
 
         // GET: Furniture/Details/5
-        public ActionResult Details(int? id) {
+        public async Task<ActionResult> Details(int? id) {
             logger.Info("[Start]");
             try {
                 logger.Debug("id: {0}", id);
                 if (id == null) {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                Furniture furniture = db.Furnitures.Find(id);
+
+                logger.Debug("service: {0}", service);
+                var furniture = await service.FindAsync(id.Value);
+
                 logger.Debug("furniture: {0}", furniture);
                 if (furniture == null) {
                     return HttpNotFound();
@@ -83,9 +77,6 @@ namespace FurnitureStore.Controllers {
         protected override void Dispose(bool disposing) {
             logger.Info("[Start]");
             logger.Debug("disposing: {0}", disposing);
-            if (disposing) {
-                db.Dispose();
-            }
             base.Dispose(disposing);
             logger.Info("[End]");
         }

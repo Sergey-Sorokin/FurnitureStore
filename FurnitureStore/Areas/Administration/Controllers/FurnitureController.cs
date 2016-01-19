@@ -1,91 +1,78 @@
 ﻿using System;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using FurnitureStore.Models;
-using System.Collections.Generic;
-using System.IO;
 using FurnitureStore.Areas.Administration.Models;
-using FurnitureStore.Areas.Administration.ViewModels;
 using FurnitureStore.ViewModels;
+using FurnitureStore.Areas.Administration.Services;
+using System.Threading.Tasks;
+using System.Threading;
+using NLog;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
-    [Authorize()]
+    [Authorize]
     public class FurnitureController : Controller {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private AdministrationFurnitureService service;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
+        private const String AdminEditDeleteRole = "FurnitureAdmin,CanEditFurtiture,CanDeleteFurtiture";
+        private const String AdminEditRole = "FurnitureAdmin,CanEditFurtiture";
+        private const String AdminDeleteRole = "FurnitureAdmin,CanDeleteFurtiture";
+
+        public FurnitureController(AdministrationFurnitureService furnitureService) {
+            service = furnitureService;
+        }
 
         // GET: Furnitures
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture, CanDeleteFurtiture")]
-        public ActionResult Index() {
-            return View(db.Furnitures.Include(x => x.Producer).OrderBy(x => x.Name).AsNoTracking().ToList());
+        [AsyncTimeout(1000)]
+        [AuthorizeWithRedirect(Roles = AdminEditDeleteRole)]
+        public async Task<ActionResult> Index(CancellationToken cancellationToken) {
+            return View(await service.ListOrderedByNameIncludingProducers(cancellationToken));
         }
 
         // GET: Furnitures/Create
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
-        public ActionResult Create() {
-            var producers = db.Producers.ToList();
-            var furniture = new FurnitureViewModel(producers);
-            furniture.PublishDate = DateTime.Now.AddHours(12);
-            return View(furniture);
+        [AsyncTimeout(1000)]
+        [AuthorizeWithRedirect(Roles = AdminEditRole)]
+        public async Task<ActionResult> Create(CancellationToken cancellationToken) {
+            return View(await service.PrepareCreateAsync(cancellationToken));
         }
 
         // POST: Furnitures/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [AsyncTimeout(1000)]
         [ValidateAntiForgeryToken]
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
-        public ActionResult Create([Bind(Include = "Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files")] FurnitureViewModel furniture) {
+        [AuthorizeWithRedirect(Roles = AdminEditRole)]
+        public async Task<ActionResult> Create(FurnitureViewModel furnitureModel, CancellationToken cancellationToken) {
             try {
+                logger.Debug("ModelState is valid: {0}", ModelState.IsValid);
+                logger.Debug("Furniture: {0}", furnitureModel.Furniture);
                 if (ModelState.IsValid) {
-                    using (var transaction = db.Database.BeginTransaction()) {
-                        furniture.CreateUser = User.Identity.Name;
-                        furniture.CreateDate = DateTime.Now;
-
-                        db.Furnitures.Add(furniture);
-                        db.SaveChanges();
-
-                        foreach (var file in furniture.Files) {
-                            if (file != null && file.ContentLength > 0) {
-                                var fileName = Path.GetFileName(file.FileName);
-                                var path = Path.Combine(Server.MapPath("~/assets"), fileName);
-                                file.SaveAs(path);
-
-                                db.Images.Add(new Image {
-                                    URL = fileName,
-                                    FurnitureID = furniture.ID
-                                });
-                            }
-                        }
-
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
-
+                    await service.CreateAsync(furnitureModel, HttpContext, cancellationToken);
                     return RedirectToAction("Index");
                 }
             }
             catch (Exception ex) {
+                logger.Error(ex, ex.Message);
                 ModelState.AddModelError("", ex.Message);
             }
 
-            furniture.Producers = db.Producers.ToList();
-            return View(furniture);
+            return View(await service.PrepareCreateAsync(cancellationToken));
         }
 
         // GET: Furnitures/Edit/5
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
-        public ActionResult Edit(int? id) {
+        [AsyncTimeout(1000)]
+        [AuthorizeWithRedirect(Roles = AdminEditRole)]
+        public async Task<ActionResult> Edit(int? id, CancellationToken cancellationToken) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            FurnitureViewModel furniture = db.Furnitures.Find(id) as FurnitureViewModel;
-            if (furniture == null) {
+
+            var furniture = await service.PrepareEditAsync(id.Value, cancellationToken);
+            if (furniture.Furniture == null) {
                 return HttpNotFound();
             }
-            furniture.Producers = db.Producers.ToList();
             return View(furniture);
         }
 
@@ -93,71 +80,36 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [AsyncTimeout(1000)]
         [ValidateAntiForgeryToken]
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanEditFurtiture")]
-        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,Description,ArticleNo,ProducerID,Price,Size,Color,Rating,Files,CheckedImages")] FurnitureViewModel furniture) {
-            try {
+        [AuthorizeWithRedirect(Roles = AdminEditRole)]
+        public async Task<ActionResult> Edit(FurnitureViewModel furnitureModel, CancellationToken cancellationToken) {
+            try {              
+                logger.Debug("ModelState is valid: {0}", ModelState.IsValid);
+                logger.Debug("Furniture: {0}", furnitureModel.Furniture);
+                logger.Debug("Files: {0}", furnitureModel.Files);
+                logger.Debug("CheckedImages: {0}", furnitureModel.CheckedImages);
+
                 if (ModelState.IsValid) {
-                    using (var transaction = db.Database.BeginTransaction()) {
-                        // Attach object to context
-                        db.Entry(furniture).State = EntityState.Modified;
-                        // Load navigation properties
-                        db.Entry(furniture).Collection(i => i.Images).Load();
-
-                        // Deleted unchecked images 
-                        var imagesToRemove = new List<Image>();
-                        foreach (var image in furniture.Images) {
-                            if (furniture.CheckedImages == null || !furniture.CheckedImages.Contains(image.ID)) {
-                                imagesToRemove.Add(image);
-                            }
-                        }
-                        db.Images.RemoveRange(imagesToRemove);
-
-                        // Add new uploaded files
-                        foreach (var file in furniture.Files) {
-                            if (file != null && file.ContentLength > 0) {
-                                var fileName = Path.GetFileName(file.FileName);
-                                var path = Path.Combine(Server.MapPath("~/assets"), fileName);
-                                file.SaveAs(path);
-
-                                // Add only file that was not added before based on filename
-                                if (!furniture.Images.Any(i => i.URL == fileName)) {
-                                    db.Images.Add(new Image {
-                                        URL = fileName,
-                                        FurnitureID = furniture.ID
-                                    });
-                                }
-                            }
-                        }
-
-                        furniture.UpdateUser = User.Identity.Name;
-                        furniture.UpdateDate = DateTime.Now;
-
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
-
+                    await service.EditAsync(furnitureModel, HttpContext, cancellationToken);
                     return RedirectToAction("Index");
                 }
-            }
-            catch (DataException dex) {
-                ModelState.AddModelError("", dex.Message);
             }
             catch (Exception ex) {
                 ModelState.AddModelError("", ex.Message);
             }
 
-            furniture.Producers = db.Producers.ToList();
-            return View(furniture);
+            return View(await service.PrepareEditAsync(furnitureModel.Furniture.ID, cancellationToken));
         }
 
         // GET: Furnitures/Delete/5
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanDeleteFurtiture")]
-        public ActionResult Delete(int? id) {
+        [AsyncTimeout(1000)]
+        [AuthorizeWithRedirect(Roles = AdminDeleteRole)]
+        public async Task<ActionResult> Delete(int? id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Furniture furniture = db.Furnitures.Find(id);
+            Furniture furniture = await service.FindAsync(id.Value);
             if (furniture == null) {
                 return HttpNotFound();
             }
@@ -165,20 +117,16 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         }
 
         // POST: Furnitures/Delete/5
+        [AsyncTimeout(1000)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [AuthorizeWithRedirect(Roles = "FurnitureAdmin, CanDeleteFurtiture")]
-        public ActionResult DeleteConfirmed(int id) {
-            Furniture furniture = db.Furnitures.Find(id);
-            db.Furnitures.Remove(furniture);
-            db.SaveChanges();
+        [AuthorizeWithRedirect(Roles = AdminDeleteRole)]
+        public async Task<ActionResult> DeleteConfirmed(int id, CancellationToken cancellationToken) {
+            await service.DeleteAsync(id, cancellationToken);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing) {
-            if (disposing) {
-                db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

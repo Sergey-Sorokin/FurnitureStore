@@ -4,11 +4,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name='yandex-verification' content='5e7d0bc8b95cd73e' />
-    <title>@ViewBag.Title - Магазин офисной мебели ВЕЛЛЕ Компани в Алматы</title>
+    <meta name="yandex-verification" content="5e7d0bc8b95cd73e" />
+    <meta name="google-site-verification" content="ZEYu11mboTdTIVbyPpuUKDzCDRIZNAkhI10u-0DoxDI" />
+    <title>@ViewBag.Title - Салон офисной мебели в Алматы ВЕЛЛЕ Компани</title>
+    @if(ViewBag.MetaDescription != null) {
+        <meta name="description" content="@ViewBag.MetaDescription" />
+    }
+    @if(ViewBag.MetaKeywords != null) {
+        <meta name="keywords" content="@ViewBag.MetaKeywords" />
+    }
     @Styles.Render("~/Content/css")
-    @RenderSection("styles", required: false)
-    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", required: false)
+    @*@Scripts.Render("~/bundles/modernizr")*@
     @Scripts.Render("~/bundles/google")
 </head>
 <body>
@@ -42,7 +49,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/ads-remover")
-    @RenderSection("scripts", required: false)
+    @RenderSection("Scripts", required: false)
     @MiniProfiler.RenderIncludes()
 </body>
 </html>

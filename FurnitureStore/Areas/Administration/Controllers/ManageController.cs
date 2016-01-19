@@ -8,9 +8,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FurnitureStore.Models;
 using FurnitureStore.Areas.Administration.ViewModels;
+using FurnitureStore.Areas.Administration.Models;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
-    [Authorize]
+    [AuthorizeWithRedirect]
     public class ManageController : Controller {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;

@@ -6,21 +6,9 @@ using System.Web.Mvc;
 using FurnitureStore.Models;
 
 namespace FurnitureStore.ViewModels {
-    public class FurnitureViewModel : Furniture {
+    public class FurnitureViewModel {
 
-        public FurnitureViewModel(IEnumerable<Producer> producers) {
-            Producers = producers;
-        }
-
-        public FurnitureViewModel() {
-
-        }
-
-        public Image DisplayImage {
-            get {
-                return (Images.Count > 0) ? Images.First() : new Image { URL = "no-image.png" };
-            }
-        }
+        public Furniture Furniture { get; set; }
 
         public IEnumerable<Producer> Producers { get; set; }
 

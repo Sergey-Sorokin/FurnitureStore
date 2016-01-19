@@ -2,7 +2,12 @@
 @model PaginationViewModel
 
 @{
-    ViewBag.Title = "Мебель";
+    ViewBag.Title = "Предложения офисной мебели";
+    ViewBag.MetaDescription = "Предложения офисной мебели в Алматы от салона офисной мебели ВЕЛЛЕ Компани";
+    ViewBag.MetaKeywords = "купить мебель в Алматы,продаю мебель в Алматы,купить офисную мебель в Алматы,продаю офисную мебель в Алматы,мебель в Алматы,офисная мебель в Алматы,ВЕЛЛЕ Компани,";
+    foreach(var f in Model.Furnitures) {
+        ViewBag.MetaKeywords += String.Format("{0}, {0} в Алматы,", f.Name).ToLower();
+    }
 }
 
 <h2>Предложения</h2>
@@ -10,9 +15,9 @@
 <section class="content_i">
     @Html.Partial("_Product", Model.Furnitures)
     @if (Model.HasMoreItems) {
-        <div class="load-more">
-            <a class="button" data-behavior="load-next-page" data-url="@Url.Action("Index", "Furniture", new { page = Model.Page })" data-next-page="@Model.Page" href="@Url.Action("Index", "Furniture", new { page = Model.Page })">Смотреть еще @Model.ItemsPerPage предложений</a>
-        </div>
+    <div class="load-more">
+        <a class="button" data-behavior="load-next-page" data-url="@Url.Action("Index", "Furniture" , new { page=Model.Page })" data-next-page="@Model.Page" href="@Url.Action("Index", "Furniture", new { page=Model.Page })">Смотреть еще @Model.ItemsPerPage предложений</a>
+    </div>
     }
 </section>
 

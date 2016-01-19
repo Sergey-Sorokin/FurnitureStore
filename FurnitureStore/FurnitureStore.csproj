@@ -219,12 +219,16 @@
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\ProducerController.cs" />
     <Compile Include="Areas\Administration\Models\AuthorizeWithRedirectAttribute.cs" />
+    <Compile Include="Areas\Administration\Services\AdministrationFurnitureService.cs" />
+    <Compile Include="Areas\Administration\Services\RoleService.cs" />
     <Compile Include="Areas\Administration\ViewModels\ControlViewModel.cs" />
     <Compile Include="ApplicationDbContext.Views.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ApplicationDbContext.Views.tt</DependentUpon>
     </Compile>
+    <Compile Include="Services\FurnitureService.cs" />
+    <Compile Include="Services\Interfaces\IService.cs" />
     <Compile Include="ViewModels\PaginationViewModel.cs" />
     <Compile Include="Ninject\FurnitureNinjectModule.cs" />
     <Compile Include="ViewModels\FurnitureViewModel.cs" />
@@ -431,6 +435,7 @@
     <Content Include="Views\Furniture\Details.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Shared\_Product.cshtml" />
+    <Content Include="Views\Furniture\_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

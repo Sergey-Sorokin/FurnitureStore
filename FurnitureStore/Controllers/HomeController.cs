@@ -6,19 +6,28 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using NLog;
+using System.Threading.Tasks;
+using FurnitureStore.Services;
 
 namespace FurnitureStore.Controllers {
     public class HomeController : Controller {
 
+        private readonly FurnitureService service;
+
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        public HomeController(FurnitureService service) {
+            logger.Info("[Start]");
+            this.service = service;
+            logger.Debug("service: {0}", service);
+            logger.Info("[End]");
+        }
 
-        public ActionResult Index() {
+        public async Task<ActionResult> Index() {
             logger.Info("[Start]");
             try {
-                var furnitures = db.Furnitures.Include(f => f.Producer).Include(f => f.Images).
-                    OrderBy(c => Guid.NewGuid()).Take(3).AsNoTracking().ToList();
+                var furnitures = await service.ListOrderedWithLimitAsync(3);
+
                 return View(furnitures);
             }
             catch (Exception ex) {

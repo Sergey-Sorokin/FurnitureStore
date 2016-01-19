@@ -1,0 +1,9 @@
+﻿@using FurnitureStore.ViewModels;
+@model PaginationViewModel
+
+@Html.Partial("_Product", Model.Furnitures)
+@if (Model.HasMoreItems) {
+    <div class="load-more">
+    <a class="button" data-behavior="load-next-page" data-url="@Url.Action("Index", "Furniture", new { page=Model.Page })" data-next-page="@Model.Page" href="@Url.Action("Index", "Furniture", new { page=Model.Page })">Смотреть еще @Model.ItemsPerPage предложений</a>
+    </div>
+}

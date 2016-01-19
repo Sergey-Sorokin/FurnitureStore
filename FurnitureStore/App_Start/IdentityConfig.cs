@@ -14,6 +14,7 @@ using FurnitureStore.Models;
 using Twilio;
 using FurnitureStore.Areas.Administration.Models;
 using FurnitureStore.Migrations;
+using FurnitureStore.Areas.Administration.Services;
 
 namespace FurnitureStore {
     public class EmailService : IIdentityMessageService {
@@ -113,7 +114,18 @@ namespace FurnitureStore {
 
         public static ApplicationRoleManager Create(
             IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context) {
-            return new ApplicationRoleManager(new RoleStore<ApplicationRole>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(context.Get<ApplicationDbContext>()));
+            return manager;
+        }
+    }
+
+    public class RoleServiceManager : RoleService {
+        public RoleServiceManager(ApplicationRoleManager roleManager, ApplicationUserManager userManager)
+            : base(roleManager, userManager) {
+        }
+
+        public static RoleServiceManager Create(IdentityFactoryOptions<RoleServiceManager> options, IOwinContext context) {
+            return new RoleServiceManager(context.Get<ApplicationRoleManager>(), context.GetUserManager<ApplicationUserManager>());
         }
     }
 

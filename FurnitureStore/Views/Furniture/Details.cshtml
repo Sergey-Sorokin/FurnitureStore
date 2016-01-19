@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = String.Format("{0} за {1:#,##0} KZT", Model.Name, Model.Price);
+    ViewBag.MetaDescription = String.Format("Купить {0} за {1:#,##0} KZT в Алматы в салоне офисной мебели ВЕЛЛЕ Компани", Model.Name, Model.Price);
+    ViewBag.MetaKeywords = String.Format("{0},{0} в Алматы,купить {0},продаю {0},купить {0} в Алматы,продаю {0} в Алматы,купить мебель в Алматы,продаю мебель в Алматы,купить офисную мебель в Алматы,продаю офисную мебель в Алматы,мебель в Алматы,офисная мебель в Алматы,ВЕЛЛЕ Компани", Model.Name).ToLower();
 }
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>

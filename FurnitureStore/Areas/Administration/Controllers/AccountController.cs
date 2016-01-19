@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -11,9 +8,11 @@ using Microsoft.Owin.Security;
 using FurnitureStore.Areas.Administration.ViewModels;
 using FurnitureStore.Areas.Administration.Models;
 using FurnitureStore.Models;
-using System.Collections.Generic;
 using System.Net;
 using NLog;
+using System.Data.Entity;
+using FurnitureStore.Areas.Administration.Services;
+using System.Threading;
 
 namespace FurnitureStore.Areas.Administration.Controllers {
     [AuthorizeWithRedirect]
@@ -21,17 +20,9 @@ namespace FurnitureStore.Areas.Administration.Controllers {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleServiceManager _roleService;
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
-
-        public AccountController() {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
 
         public ApplicationSignInManager SignInManager {
             get {
@@ -60,11 +51,21 @@ namespace FurnitureStore.Areas.Administration.Controllers {
             }
         }
 
+        public RoleServiceManager RoleServiceManager {
+            get {
+                return _roleService ?? HttpContext.GetOwinContext().Get<RoleServiceManager>();
+            }
+            private set {
+                _roleService = value;
+            }
+        }      
+
         //
         // GET: /Account
+        [AsyncTimeout(1000)]
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser, CanDeleteUser")]
-        public ActionResult Index() {
-            return View(UserManager.Users.ToList());
+        public async Task<ActionResult> Index(CancellationToken cancel) {
+            return View(await UserManager.Users.ToListAsync(cancel));
         }
 
         // GET: /Account/Edit/5
@@ -79,54 +80,23 @@ namespace FurnitureStore.Areas.Administration.Controllers {
                 return HttpNotFound();
             }
 
-            var accountRoles = new List<AccountRolesViewModel.AccountRole>();
-            foreach (ApplicationRole role in RoleManager.Roles.ToList()) {
-                accountRoles.Add(new AccountRolesViewModel.AccountRole {
-                    Name = role.Name,
-                    Description = role.Description,
-                    Checked = await UserManager.IsInRoleAsync(user.Id, role.Name)
-                });
-            }
-
-            return View(new AccountRolesViewModel {
-                User = user,
-                Roles = accountRoles
-            });
+            return View(await RoleServiceManager.GetUserRolesAsync(user));
         }
 
         // POST: /Account/Edit
         [AuthorizeWithRedirect(Roles = "Admin, UserAdmin, CanEditUser")]
         [HttpPost]
-        public async Task<ActionResult> Edit(AccountRolesViewModel model) {
+        public async Task<ActionResult> Edit([Bind(Include = "User, Roles")] AccountRolesViewModel model) {
             if (ModelState.IsValid) {
                 var user = UserManager.FindById(model.User.Id);
                 if (user == null) {
                     return HttpNotFound();
                 }
                 logger.Info("User is found: {0}", user.UserName);
-                IdentityResult result = null;
 
-                logger.Debug("Change UserName from {0} to {1}", user.UserName, model.User.UserName);
-                user.UserName = model.User.UserName;
-                logger.Debug("Change PhoneNumber from {0} to {1}", user.PhoneNumber, model.User.PhoneNumber);
-                user.PhoneNumber = model.User.PhoneNumber;
-                logger.Debug("Change Email from {0} to {1}", user.Email, model.User.Email);
-                user.Email = model.User.Email;
-
-                result = await UserManager.UpdateAsync(user);
-                logger.Debug("Update result: {0}", result.Succeeded);
-                if (result.Succeeded) {
-                    foreach (var role in await UserManager.GetRolesAsync(user.Id)) {
-                        logger.Debug("User role: {0}", role);
-                        result = await UserManager.RemoveFromRoleAsync(user.Id, role);
-                        logger.Debug("RemoveFromRole result: {0}", result.Succeeded);
-                    }
-
-                    result = await UserManager.AddToRolesAsync(user.Id, model.Roles.Where(x => x.Checked).Select(x => x.Name).ToArray());
-                    logger.Debug("AddToRoles result: {0}", result.Succeeded);
-                    if (result.Succeeded)
-                        return RedirectToAction("index");
-                }
+                IdentityResult result = await RoleServiceManager.ChangeUserRolesAsync(user, model);
+                if (result.Succeeded)
+                    return RedirectToAction("index");
 
                 AddErrors(result);
             }

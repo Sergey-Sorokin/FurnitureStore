@@ -12,7 +12,7 @@ namespace FurnitureStore.Models {
         [Required()]
         public String Name { get; set; }
 
-        [Required()]
+        [Required]
         [Display(Name = "Дата публикации")]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.DateTime)]
@@ -26,7 +26,7 @@ namespace FurnitureStore.Models {
         [Display(Name = "Артикул")]
         public String ArticleNo { get; set; }
 
-        [Required()]
+        [Required]
         [DisplayFormat(DataFormatString = "{0:#,##0 KZT}")]
         [Display(Name = "Цена")]
         [DataType(DataType.Currency)]
@@ -53,5 +53,12 @@ namespace FurnitureStore.Models {
         public DateTime? CreateDate { get; set; }
         public String UpdateUser { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        [NotMapped]
+        public Image DisplayImage {
+            get {
+                return (Images != null && Images.Count > 0) ? new List<Image>(Images)[0] : new Image { URL = "no-image.png" };
+            }
+        }
     }
 }

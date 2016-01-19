@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using FurnitureStore.Models;
 using FurnitureStore.Areas.Administration.Models;
+using FurnitureStore.Areas.Administration.Services;
 
 namespace FurnitureStore {
     public partial class Startup {
@@ -17,6 +18,7 @@ namespace FurnitureStore {
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+            app.CreatePerOwinContext<RoleServiceManager>(RoleServiceManager.Create);
 
             // Включение использования файла cookie, в котором приложение может хранить информацию для пользователя, выполнившего вход,
             // и использование файла cookie для временного хранения информации о входах пользователя с помощью стороннего поставщика входа
